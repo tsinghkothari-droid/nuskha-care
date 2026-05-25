@@ -7,6 +7,7 @@ import { chooseReviewPath } from "./review-router.mjs";
 import { validateMedicalFacts } from "./validator.mjs";
 import { parseInboundMessage } from "../schemas/inbound.mjs";
 import { getStore } from "../store/index.mjs";
+import { config } from "../config.mjs";
 
 export async function handleInboundMessage(payload, context = {}) {
   const store = getStore();
@@ -76,7 +77,8 @@ export async function handleInboundMessage(payload, context = {}) {
   const validation = validateMedicalFacts(extraction, family);
   const risk = routeRisk({ extraction, validation, familyMemory: family });
   const draft = generateExplanationDraft({ extraction, validation, risk, family });
-  const route = chooseReviewPath(risk, draft.safety);
+  const initialRoute = chooseReviewPath(risk, draft.safety);
+  const route = applyPilotReviewGate(initialRoute, risk);
   const delivery = await createDeliveryPlan({ route, draft, family });
 
   let reviewTask = null;
@@ -117,6 +119,17 @@ export async function handleInboundMessage(payload, context = {}) {
     risk,
     route,
     delivery
+  };
+}
+
+function applyPilotReviewGate(route, risk) {
+  if (!config.pilotMode || route.queue !== "auto") return route;
+  return {
+    queue: "pharmacist",
+    reason: "pilot_manual_review",
+    slaMinutes: 30,
+    pilotMode: true,
+    originalPath: risk.path
   };
 }
 

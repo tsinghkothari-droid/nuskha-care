@@ -5,6 +5,8 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || "development",
   defaultLanguage: process.env.NUSKHA_DEFAULT_LANGUAGE || "hi",
   publicBaseUrl: process.env.PUBLIC_BASE_URL || `http://127.0.0.1:${process.env.PORT || 8787}`,
+  pilotMode: process.env.NUSKHA_PILOT_MODE === "true",
+  wabaWebhookVerifyToken: process.env.WABA_WEBHOOK_VERIFY_TOKEN || "",
   databaseProvider: process.env.DATABASE_PROVIDER || "memory",
   databaseUrl: process.env.DATABASE_URL || "",
   deliveryProvider: process.env.NUSKHA_DELIVERY_PROVIDER || "stub",

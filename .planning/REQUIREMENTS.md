@@ -90,3 +90,11 @@
 - Sell medicine in MVP.
 - Use Baileys in production.
 - Commit real medical files or secrets.
+
+## L1 Traceability Status
+
+As of 2026-05-25, the L1 implementation covers the MVP requirement surface through synthetic flows and local/provider seams. Production readiness still requires real provider setup, clinical signoff, auth/RBAC, durable storage verification, and real WABA/TTS delivery.
+
+- Intake, consent, extraction, validation, risk, review workflow, voice/delivery, dashboard, chatbot, and safety/compliance requirements have code or documentation anchors.
+- Phase 6 adds pilot controls for `SAFE-03`, `SAFE-04`, and `SAFE-05`: erasure intake, pilot runbook, readiness checks, template pack, and safe logging redaction.
+- Open hardening: `STORE-01` through `STORE-04` must be verified against real Neon/S3, `REVIEW-02` needs real locking semantics, and production WABA must replace Baileys before live use.

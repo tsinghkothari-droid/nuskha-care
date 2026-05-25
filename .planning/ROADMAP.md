@@ -122,3 +122,18 @@ Exit criteria:
 - Founder can process a synthetic WABA case from intake to delivery.
 - Every outbound response is reviewed in pilot mode.
 - Team can explain storage, access, deletion, and incident handling.
+
+## L1 Completion Status
+
+All planned phases are implemented at L1 as of 2026-05-25.
+
+| Phase | Status | Verification |
+|---|---|---|
+| 1 | implemented-l1 | Neon-shaped schema, store seam, fixtures, duplicate guard, tests |
+| 2 | implemented-l1 | Crof/Nahcrof adapter path, schema validation, fallback routing, tests |
+| 3 | implemented-l1 | Review APIs, edit/approve/escalate, correction capture, tests |
+| 4 | implemented-l1 | TTS/delivery seams, local artifacts, Baileys dev sender, tests |
+| 5 | implemented-l1 | API-backed pharmacist CRM and pharmacy OS gap coverage, browser-checked |
+| 6 | implemented-l1 | Pilot mode, WABA templates, consent, erasure intake, readiness API, tests |
+
+Next roadmap should be production hardening, not more L1 surface area: auth/RBAC, real Neon migration verification, private object storage, production WABA adapter, real TTS, clinical signoff, and controlled pilot operations.

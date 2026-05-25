@@ -9,6 +9,13 @@ import { getAiProviderStatus, runAiHealthCheck } from "./ai/provider.mjs";
 import { handleInboundMessage } from "./core/pipeline.mjs";
 import { buildPharmacyOpsSummary } from "./core/pharmacy-os.mjs";
 import {
+  buildPilotReadiness,
+  consentCopy,
+  recordErasureRequest,
+  verifyWabaWebhook,
+  wabaTemplates
+} from "./core/pilot-readiness.mjs";
+import {
   approveReviewTask,
   editReviewTask,
   escalateReviewTask,
@@ -67,6 +74,23 @@ export function buildServer() {
 
   app.get("/crm/ops", async () => buildPharmacyOpsSummary());
 
+  app.get("/pilot/readiness", async () => buildPilotReadiness());
+
+  app.get("/pilot/waba-templates", async () => ({
+    ok: true,
+    templates: wabaTemplates
+  }));
+
+  app.get("/pilot/consent-copy", async () => ({
+    ok: true,
+    consentCopy
+  }));
+
+  app.post("/privacy/erasure-requests", async (request, reply) => {
+    const result = await recordErasureRequest(request.body || {});
+    return reply.code(result.ok ? 202 : 422).send(result);
+  });
+
   app.post("/dev/whatsapp-inbound", async (request, reply) => {
     const result = await handleInboundMessage(request.body, {
       source: "baileys-dev"
@@ -113,6 +137,12 @@ export function buildServer() {
     });
 
     return reply.code(202).send(result);
+  });
+
+  app.get("/webhooks/waba/inbound", async (request, reply) => {
+    const result = verifyWabaWebhook(request.query || {});
+    if (result.ok) return reply.type("text/plain").send(result.challenge);
+    return reply.code(403).send(result);
   });
 
   app.get("/review/tasks", async (request) => ({

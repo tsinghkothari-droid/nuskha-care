@@ -87,6 +87,10 @@ http://localhost:8787/crm
 CRM integrations:
 
 - `/crm/ops` exposes the L1 pharmacy care desk layer: refill recovery, WhatsApp inbox, family portal summaries, order/payment state, inventory/expiry hooks, med sync, campaigns, adherence, staff SLA, consent, and fulfillment.
+- `/pilot/readiness` exposes the first-pilot checklist for manual review mode, WABA verification, consent copy, templates, erasure, logging, clinical review, and deployment secrets.
+- `/pilot/waba-templates` returns the WABA utility template pack.
+- `/pilot/consent-copy` returns Hindi and English consent copy.
+- `/privacy/erasure-requests` records an operator-handled erasure request.
 - `/integrations/status` shows Nahcrof/Crof configuration and Baileys dev session state.
 - `/integrations/ai/check` runs a live Nahcrof health check when `.env` is configured.
 - `/integrations/whatsapp/status` shows the local Baileys profile pairing state.
@@ -140,6 +144,7 @@ No real patient documents, phone numbers, prescriptions, or medical records shou
 - [Technical Structure](./docs/TECHNICAL_STRUCTURE.md)
 - [Technical Implementation Research](./docs/TECHNICAL_IMPLEMENTATION_RESEARCH.md)
 - [Readiness Check](./docs/READINESS_CHECK.md)
+- [Pilot Readiness](./docs/PILOT_READINESS.md)
 - [Chatbot Context](./docs/CHATBOT_CONTEXT.md)
 - [Pharmacist CRM Idea](./docs/PHARMACIST_CRM_IDEA.md)
 - [Competitor Gap Analysis](./docs/COMPETITOR_GAP_ANALYSIS.md)

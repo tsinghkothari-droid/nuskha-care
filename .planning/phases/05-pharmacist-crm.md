@@ -36,4 +36,5 @@ Build the first pharmacist CRM/dashboard as a serious care-management console, v
 - 2026-05-25: Added competitor gap analysis covering refill recovery, two-way messaging, patient portal/forms, payments, inventory hooks, medication synchronization, adherence, staff workflow, consent, and delivery tracking.
 - 2026-05-25: Added `/crm/ops` as the L1 pharmacy care desk backend layer for refill recovery, WhatsApp inbox, family portal summaries, order/payment state, inventory/expiry hooks, medication sync, campaigns, adherence, staff SLA, consent, and pickup/delivery tracking.
 - 2026-05-25: Wired the CRM business desk, refill pipeline, patient ledger, and WhatsApp inbox panels to the `/crm/ops` response so the competitor gaps are visible from the live dashboard.
+- 2026-05-25: Verified Phase 5 L1 with `npm test`, `npm run check`, fixture run, `/crm/ops` smoke test, and browser screenshot.
 - Remaining before production: add authentication, role permissions, real patient search, pagination, real refill scheduling, real payment links, inventory/POS integration, and move the UI into a maintainable Next.js app when the product surface stabilizes.
