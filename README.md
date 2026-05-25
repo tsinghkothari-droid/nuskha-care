@@ -173,19 +173,21 @@ Production must use WhatsApp Business API through an approved provider.
 
 ## AI Voice Roadmap
 
-Nuskha already has a TTS seam in `src/tts/tts-service.mjs`, plus environment slots for Sarvam and Bhashini. The next voice milestone should borrow the working shape from the local `voice-local-mvp` project: provider abstraction, speech-specific text cleanup before synthesis, caching, latency measurement, and round-trip quality checks.
+The moat is not "robot voice." Everyone will have robot voice. The moat is the pharmacist-approved family voice note: short, calm, local-language, WhatsApp-native, and safe enough that a tired parent actually listens.
 
-| Step | Goal | Implementation direction |
-|---|---|---|
-| 1. Real provider adapter | Replace stub voice files with real audio | Implement `sarvam` first, keep `bhashini` as India-language fallback, preserve the current `synthesizeVoice({ script, language })` interface |
-| 2. Spoken-script cleanup | Make voice notes sound human and short | Add a speech-delivery rule layer before TTS so parent scripts become shorter, less formal, and easier to understand when spoken |
-| 3. WhatsApp audio format | Send native voice-note compatible media | Produce OGG/Opus artifacts, store them privately, and pass media URLs to the WABA delivery adapter |
-| 4. Voice cache | Cut cost and latency | Cache common safety phrases and repeated explanations by language, provider, voice, and script hash |
-| 5. Quality checks | Prevent bad or unsafe audio | Re-transcribe generated voice in test mode and compare it against the approved script for meaning drift, missing safety warnings, and pronunciation issues |
-| 6. Observability | Know if voice is usable | Track TTS latency, provider failure rate, cache hit rate, audio duration, and WhatsApp delivery status |
-| 7. Language rollout | Expand safely beyond Hindi | Ship Hindi first, then Marathi, Tamil, Bengali, and Gujarati only after pharmacist review confirms quality |
+Nuskha already has the TTS seam in `src/tts/tts-service.mjs`, plus Sarvam and Bhashini env slots. The next voice milestone should borrow the strongest pattern from the local `voice-local-mvp` project: provider abstraction, speech cleanup before TTS, caching, latency measurement, and round-trip quality checks.
 
-Voice must remain downstream of human review in pilot mode. The system may generate audio only from the approved parent script, never directly from raw model output.
+| Stage | Fun name | What makes it different | Build direction |
+|---|---|---|---|
+| 1 | Real Voice, No Drama | Swap fake audio for real parent-language voice notes | Implement `sarvam` first, keep `bhashini` fallback, preserve `synthesizeVoice({ script, language })` |
+| 2 | Doctor Paper To Maa Voice | Turn stiff medical text into natural spoken explanation | Add a speech-delivery rule layer: shorter lines, no jargon, no diagnosis, no dose-change language |
+| 3 | WhatsApp Native Feel | Make output feel like a normal family voice note, not an app export | Generate private OGG/Opus artifacts and send through WABA media delivery |
+| 4 | Phrase Piggy Bank | Save money on repeated safety phrases | Cache by language, provider, voice, and script hash |
+| 5 | Voice Mirror Test | Catch bad audio before a family hears it | Re-transcribe generated audio and compare against the approved script for missing warnings or meaning drift |
+| 6 | Pharmacist Playback Desk | Let the reviewer hear the exact voice before send | Add preview, regenerate, approve, and audit controls inside the CRM |
+| 7 | Local Language League | Win by sounding local, not just multilingual | Hindi first, then Marathi, Tamil, Bengali, and Gujarati after reviewer quality checks |
+
+Golden rule: voice is downstream of human review in pilot mode. Nuskha may speak only the approved parent script, never raw model output.
 
 ## Architecture
 
