@@ -1,7 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
+import { config } from "../src/config.mjs";
 import { handleInboundMessage } from "../src/core/pipeline.mjs";
+
+async function withPilotMode(value, fn) {
+  const previous = config.pilotMode;
+  config.pilotMode = value;
+  try {
+    return await fn();
+  } finally {
+    config.pilotMode = previous;
+  }
+}
 
 test("requires consent before processing", async () => {
   const result = await handleInboundMessage({
@@ -15,18 +26,20 @@ test("requires consent before processing", async () => {
 });
 
 test("processes consented low-risk prescription", async () => {
-  const phone = "910000000002";
-  await handleInboundMessage({ messageId: "test-consent", phone, text: "YES" });
+  await withPilotMode(false, async () => {
+    const phone = "910000000002";
+    await handleInboundMessage({ messageId: "test-consent", phone, text: "YES" });
 
-  const result = await handleInboundMessage({
-    messageId: "test-green",
-    phone,
-    text: "Rx Metformin 500mg once daily after food"
+    const result = await handleInboundMessage({
+      messageId: "test-green",
+      phone,
+      text: "Rx Metformin 500mg once daily after food"
+    });
+
+    assert.equal(result.ok, true);
+    assert.equal(result.risk.path, "green");
+    assert.equal(result.status, "ready_to_send");
   });
-
-  assert.equal(result.ok, true);
-  assert.equal(result.risk.path, "green");
-  assert.equal(result.status, "ready_to_send");
 });
 
 test("queues high-risk prescription for doctor review", async () => {
@@ -43,4 +56,3 @@ test("queues high-risk prescription for doctor review", async () => {
   assert.equal(result.risk.path, "red");
   assert.equal(result.route.queue, "doctor");
 });
-
