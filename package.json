@@ -8,6 +8,10 @@
     "node": ">=22"
   },
   "scripts": {
+    "dev:api": "node src/server.mjs",
+    "simulate": "node src/cli/simulate.mjs",
+    "test": "node --test",
+    "check": "node --check src/server.mjs && node --check src/cli/simulate.mjs && npm run check:baileys",
     "dev:baileys:login": "node experimental/baileys-transport/login.mjs",
     "dev:baileys:bridge": "node experimental/baileys-transport/bridge.mjs",
     "check:baileys": "node --check experimental/baileys-transport/login.mjs && node --check experimental/baileys-transport/bridge.mjs"
@@ -15,8 +19,9 @@
   "dependencies": {
     "@whiskeysockets/baileys": "^7.0.0-rc.9",
     "dotenv": "^17.3.1",
+    "fastify": "^5.8.5",
     "pino": "^9.9.4",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "zod": "^4.4.3"
   }
 }
-
