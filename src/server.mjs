@@ -1,3 +1,5 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import { config } from "./config.mjs";
 import { logger } from "./logger.mjs";
@@ -5,7 +7,7 @@ import { getAiProviderStatus, runAiHealthCheck } from "./ai/provider.mjs";
 import { handleInboundMessage } from "./core/pipeline.mjs";
 
 export function buildServer() {
-  const app = Fastify({ logger });
+  const app = Fastify({ loggerInstance: logger });
 
   app.get("/health", async () => ({
     ok: true,
@@ -35,7 +37,7 @@ export function buildServer() {
   return app;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] || "")) {
   const app = buildServer();
   await app.listen({ port: config.port, host: "0.0.0.0" });
 }
