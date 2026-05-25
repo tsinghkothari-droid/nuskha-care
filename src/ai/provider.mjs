@@ -4,6 +4,7 @@ import { callOpenAiCompatibleChat } from "./openai-compatible.mjs";
 export function getAiProviderStatus() {
   return {
     provider: config.ai.provider,
+    extractionProvider: config.ai.extractionProvider,
     configured: isAiConfigured(),
     baseUrl: config.ai.baseUrl ? redactBaseUrl(config.ai.baseUrl) : "",
     model: config.ai.model
@@ -67,4 +68,3 @@ function redactBaseUrl(value) {
     return "[configured]";
   }
 }
-

@@ -53,7 +53,7 @@ Classifies input into prescription, lab report, medicine label, or unsupported.
 
 `src/core/extractor.mjs`
 
-Temporary structured extraction stub. Later this becomes Gemini structured output plus Document AI fallback.
+Temporary structured extraction stub. Later this becomes Crof/Nahcrof structured extraction where possible, with Gemini vision or Document AI fallback for image-heavy cases.
 
 `src/core/validator.mjs`
 
@@ -100,7 +100,8 @@ Still to build:
 
 - Neon Postgres persistence.
 - S3-compatible private object storage.
-- Real Gemini extraction.
+- Real Crof/Nahcrof structured extraction.
+- Gemini vision fallback for cases Crof cannot parse from media.
 - Real drug table ingestion.
 - Bhashini/Sarvam TTS.
 - WABA provider send adapter.

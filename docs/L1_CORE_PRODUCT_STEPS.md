@@ -146,7 +146,8 @@ Output:
 
 Build first:
 
-- Gemini structured-output prompt.
+- Crof/Nahcrof structured-output prompt first.
+- Gemini vision fallback prompt for image-heavy cases.
 - JSON schema validation.
 - Low-confidence fallback queue.
 
@@ -437,4 +438,3 @@ The third demo should show one red case:
 - No production Baileys.
 - No processing before consent.
 - No silent failure for red cases.
-

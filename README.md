@@ -85,7 +85,7 @@ Red path: emergency terms, critical lab values, pregnancy, child patient, chemot
 - Neon Postgres for durable data.
 - S3-compatible private object storage for prescriptions, lab reports, and voice files.
 - BullMQ and Redis for queues.
-- Gemini Flash for structured extraction.
+- Crof/Nahcrof for structured extraction when possible, with Gemini vision fallback for image-heavy cases.
 - Rule engine for risk routing.
 - Bhashini TTS first, Sarvam or ElevenLabs fallback.
 - Next.js pharmacist dashboard.

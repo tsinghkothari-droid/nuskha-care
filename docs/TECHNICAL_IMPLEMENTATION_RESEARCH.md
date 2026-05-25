@@ -11,7 +11,8 @@ This note turns the GitHub/docs search into a concrete implementation plan for t
 - Sarvam Bulbul v3: `https://docs.sarvam.ai/api-reference-docs/getting-started/models/bulbul`
 - Sarvam REST stream TTS: `https://docs.sarvam.ai/api-reference-docs/text-to-speech/convert-stream`
 - Sarvam TTS overview: `https://docs.sarvam.ai/api-reference-docs/api-guides-tutorials/text-to-speech/overview`
-- Gemini structured outputs: `https://ai.google.dev/gemini-api/docs/structured-output`
+- Crof/Nahcrof OpenAI-compatible structured extraction through `https://ai.nahcrof.com/v1`
+- Gemini structured outputs as fallback: `https://ai.google.dev/gemini-api/docs/structured-output`
 - Neon Postgres: `https://neon.com/docs`
 - S3-compatible private object storage for prescriptions, lab reports, and generated voice files.
 
@@ -148,9 +149,18 @@ Do not make the bucket public.
 
 ## 3. Structured Extraction
 
-Use Gemini structured output first. Keep Nahcrof/Crof as a backup for text-only structured tasks if needed.
+Use Crof/Nahcrof structured extraction first when possible. It is already configured through the OpenAI-compatible provider slot and health checks pass locally.
 
-Official Gemini structured-output pattern:
+Use Gemini structured output only as fallback for image-heavy cases where Crof cannot directly parse the media or where Crof returns low-confidence/invalid JSON.
+
+Crof/Nahcrof pattern:
+
+- Send the extracted text, image-derived text, or signed media reference to the OpenAI-compatible chat endpoint.
+- Ask for strict JSON only.
+- Parse with local Zod schema.
+- Route invalid JSON or low confidence to human review or Gemini fallback.
+
+Gemini fallback pattern:
 
 - Set response MIME type to `application/json`.
 - Provide JSON Schema.
@@ -159,7 +169,8 @@ Official Gemini structured-output pattern:
 Needed module:
 
 ```text
-src/extraction/gemini-vision-extractor.mjs
+src/extraction/crof-structured-extractor.mjs
+src/extraction/gemini-vision-fallback.mjs
 ```
 
 Input:
@@ -195,6 +206,8 @@ Important:
 - If JSON schema parse fails, route to human OCR queue.
 - If confidence is low, route yellow.
 - Preserve raw OCR text for reviewer inspection.
+- Crof/Nahcrof should be the first provider because it is already configured locally.
+- Gemini should be a fallback, not the default path.
 
 ## 4. Drug And Lab Validation
 
@@ -439,10 +452,11 @@ Build in this order:
 4. Delivery adapter interface wired into pipeline.
 5. Review task APIs.
 6. Synthetic fixture runner for green/yellow/red.
-7. Gemini structured extractor.
-8. Private object storage for inbound documents and generated audio.
-9. Pharmacist dashboard.
-10. WABA production adapter.
+7. Crof/Nahcrof structured extractor.
+8. Gemini fallback extractor for media cases.
+9. Private object storage for inbound documents and generated audio.
+10. Pharmacist dashboard.
+11. WABA production adapter.
 
 ## Immediate Next Code Slice
 

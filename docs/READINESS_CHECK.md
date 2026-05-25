@@ -171,7 +171,8 @@ Use AI for real document understanding without letting it make safety decisions.
 
 Required:
 
-1. Gemini or Nahcrof structured extraction adapter.
+1. Crof/Nahcrof structured extraction adapter.
+2. Gemini vision fallback for image-heavy or Crof-failed cases.
 2. Prompt that returns strict JSON only.
 3. JSON schema validation.
 4. Low-confidence fallback to human OCR.
@@ -278,7 +279,7 @@ Build these first:
 3. Fixture runner for green/yellow/red synthetic cases.
 4. Real WABA adapter interface with dev send stub.
 5. TTS adapter interface with local stub, then Bhashini.
-6. Structured extraction provider interface using Nahcrof/Gemini.
+6. Structured extraction provider interface using Crof/Nahcrof first and Gemini fallback.
 
 ## Not Ready Because
 
