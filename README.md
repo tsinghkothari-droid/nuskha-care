@@ -1,160 +1,264 @@
 # Nuskha Care
 
-Nuskha Care is a WhatsApp-first medication and lab-report explanation service for Indian families split across countries.
+WhatsApp-first medical document explanation for Indian families and neighborhood pharmacists.
 
-An older parent in India sends a prescription, lab report, or medicine label on WhatsApp. Nuskha Care reads it, validates what it can, routes risky cases to a pharmacist or doctor, and sends back a simple voice note in the parent's language. The child gets a concise caregiver summary.
+Nuskha Care helps a family understand what is written on a prescription, lab report, or medicine label. It reads the document, validates what it can, routes risk through deterministic rules, and prepares a simple parent-language explanation for human review.
 
-Nuskha Care does not diagnose disease, change prescriptions, replace doctors, or sell medicines. The core product is safe explanation plus human review, delivered where families already live: WhatsApp.
+It is not a doctor, not a diagnosis engine, not a medicine marketplace, and not ready for unsupervised real patient use.
+
+## Current Status
+
+This repository is a public L1 implementation across the planned GSD phases. It contains working local APIs, synthetic fixtures, provider seams, a pharmacist CRM, and pilot-readiness controls.
+
+| Area | Status |
+|---|---|
+| Core intake and consent | implemented-l1 |
+| Structured extraction path | implemented-l1 |
+| Drug/lab validation | implemented-l1 |
+| Rule-based risk routing | implemented-l1 |
+| Pharmacist/doctor review APIs | implemented-l1 |
+| Voice and delivery seams | implemented-l1 |
+| Pharmacist CRM | implemented-l1 |
+| Pharmacy care desk layer | implemented-l1 |
+| Pilot readiness controls | implemented-l1 |
+| Production WABA, auth, real storage | not production-ready |
 
 ## Core Product
 
 The first product is:
 
-> A family medical-document explanation layer for WhatsApp.
+> Safe prescription and lab-report explanation plus refill recovery and WhatsApp family CRM for pharmacists.
 
-It turns messy healthcare paperwork into understandable family communication:
+The workflow:
 
-- Parent sends photo on WhatsApp.
-- System classifies the document: prescription, lab report, medicine label, or unsupported.
-- Vision model extracts structured facts.
-- Drug and lab validators check extracted facts against known reference data.
-- Rule-based risk engine routes the case to green, yellow, or red path.
-- AI drafts a parent voice script and child summary from only validated facts.
-- Pharmacist or doctor reviews uncertain or high-risk cases.
-- Parent receives a mother-tongue voice note.
-- Family memory improves future review with known medicines, doctors, allergies, language, and lab trends.
+1. Parent or caregiver sends a document on WhatsApp.
+2. Nuskha classifies it as prescription, lab report, medicine label, or unsupported.
+3. AI extracts structured facts.
+4. Validators check medicines, lab values, and confidence.
+5. A deterministic risk engine routes green, yellow, or red.
+6. AI drafts a parent script and child summary from validated facts only.
+7. Pharmacist or doctor reviews uncertain or risky cases.
+8. The family receives a safe explanation, not a diagnosis.
 
-## What Nuskha Explains
+## What It Can Explain
 
 For prescriptions:
 
 - Medicine name, when confidently identified.
-- What the medicine is commonly used for, in simple words.
-- Timing instructions exactly as written or marked unclear.
-- Two warning signs to watch.
-- Three questions to ask the doctor next visit.
-- Reminder: do not change dose without asking the doctor.
+- Common use in simple words.
+- Timing exactly as written or marked unclear.
+- Warning signs to watch.
+- Questions to ask the doctor.
+- Reminder to not change dose without the doctor.
 
 For lab reports:
 
-- Which values appear high, low, normal, or critical.
-- What body area the test usually relates to.
-- Red-flag symptoms where the family should seek urgent care.
-- Reminder: discuss interpretation with the treating doctor.
+- Values marked high, low, normal, or critical.
+- The body area the test usually relates to.
+- Red-flag symptoms that need urgent care.
+- Reminder to discuss interpretation with the treating doctor.
 
-## What Nuskha Does Not Do
+## Safety Boundaries
 
-- No diagnosis.
-- No medicine substitution.
-- No instruction to stop, start, or change a dose.
-- No "all clear" message.
-- No diet plan in the MVP.
-- No medicine marketplace in the MVP.
-- No storing casual WhatsApp chat that is unrelated to care.
+Nuskha Care must not:
 
-## Why WhatsApp
+- diagnose disease,
+- change, stop, or start a dose,
+- recommend cheaper substitutes,
+- say a number is safe or no worry,
+- bypass human review during pilot mode,
+- use Baileys for production patient workflows,
+- store unrelated WhatsApp chit-chat as medical history,
+- commit real patient records or secrets.
 
-The buyer is often an NRI child. The user is often an older parent in India. App downloads, English interfaces, OTP friction, and tiny UI flows are the wrong interface for this family workflow.
+## Quickstart
 
-WhatsApp is already installed, trusted, and used for healthcare photos today. Nuskha Care makes that existing behavior safer, clearer, and more accountable.
+Requirements:
 
-## Safety Model
+- Node.js 22 or newer
+- npm
 
-Nuskha Care separates reading from safety decisions:
-
-- AI reads documents and drafts explanations.
-- Deterministic rules decide routing risk.
-- Humans review uncertain or high-risk cases.
-- Every decision is versioned and audited.
-
-The business is not "replace pharmacist." The business is "give pharmacist leverage over the messy long tail."
-
-## Local Commands
+Install and verify:
 
 ```bash
+npm install
 npm test
 npm run check
 npm run fixtures
+```
+
+Start the API and CRM:
+
+```bash
 npm run dev:crm
 ```
 
-The live CRM is served by the Fastify backend at:
+Open:
 
 ```text
 http://localhost:8787/crm
 ```
 
-CRM integrations:
+Seed local synthetic cases:
 
-- `/crm/ops` exposes the L1 pharmacy care desk layer: refill recovery, WhatsApp inbox, family portal summaries, order/payment state, inventory/expiry hooks, med sync, campaigns, adherence, staff SLA, consent, and fulfillment.
-- `/pilot/readiness` exposes the first-pilot checklist for manual review mode, WABA verification, consent copy, templates, erasure, logging, clinical review, and deployment secrets.
-- `/pilot/waba-templates` returns the WABA utility template pack.
-- `/pilot/consent-copy` returns Hindi and English consent copy.
-- `/privacy/erasure-requests` records an operator-handled erasure request.
-- `/integrations/status` shows Nahcrof/Crof configuration and Baileys dev session state.
-- `/integrations/ai/check` runs a live Nahcrof health check when `.env` is configured.
-- `/integrations/whatsapp/status` shows the local Baileys profile pairing state.
-- `/integrations/whatsapp/send` sends a dev WhatsApp text using the paired Baileys profile.
+```bash
+curl -X POST http://localhost:8787/dev/seed-fixtures -H "content-type: application/json" -d "{}"
+```
 
-WhatsApp dev bridge:
+## Environment
+
+Copy `.env.example` to `.env` for local use.
+
+Important local settings:
+
+```text
+PORT=8787
+NUSKHA_DEFAULT_LANGUAGE=hi
+NUSKHA_PILOT_MODE=true
+NUSKHA_AI_PROVIDER=stub
+NUSKHA_DELIVERY_PROVIDER=stub
+NUSKHA_TTS_PROVIDER=stub
+```
+
+For Nahcrof/Crof-compatible extraction health checks:
+
+```text
+NUSKHA_AI_PROVIDER=nahcrof
+OPENAI_BASE_URL=...
+OPENAI_API_KEY=...
+OPENAI_MODEL=...
+```
+
+Do not commit `.env`, runtime folders, patient files, WhatsApp auth state, or real medical documents.
+
+## Useful Endpoints
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /health` | API and AI provider status |
+| `GET /crm` | Pharmacist CRM |
+| `GET /crm/ops` | Pharmacy OS layer: refills, inbox, portal, orders, inventory, adherence, staff SLA |
+| `POST /dev/seed-fixtures` | Create synthetic demo cases through the real pipeline |
+| `POST /dev/whatsapp-inbound` | Local WhatsApp-style inbound webhook |
+| `GET /review/tasks` | List review tasks |
+| `GET /review/tasks/:id` | Inspect a review task |
+| `POST /review/tasks/:id/edit` | Edit parent script or child summary |
+| `POST /review/tasks/:id/approve` | Approve and create delivery plan |
+| `POST /review/tasks/:id/escalate` | Escalate to doctor queue |
+| `GET /pilot/readiness` | Pilot readiness checklist |
+| `GET /pilot/waba-templates` | WABA utility template pack |
+| `GET /pilot/consent-copy` | Hindi and English consent text |
+| `POST /privacy/erasure-requests` | Record an operator-handled erasure request |
+| `GET /integrations/status` | AI and Baileys dev transport status |
+
+## WhatsApp Development Transport
+
+Baileys is included only for internal development before WABA approval.
+
+Login:
 
 ```bash
 npm run dev:baileys:login -- nuskha-dev --stay-alive
+```
+
+Run bridge:
+
+```bash
 npm run dev:baileys:bridge -- nuskha-dev
 ```
 
-## MVP Paths
+Production must use WhatsApp Business API through an approved provider.
 
-Green path: clean prescription or lab report, low-risk content, high extraction confidence. The system can send automatically after safety checks.
+## Architecture
 
-Yellow path: unclear writing, unknown medicine, abnormal non-critical lab value, or medium-risk medicine. Pharmacist reviews before send.
+```text
+WhatsApp / dev webhook
+        |
+Fastify API
+        |
+Classifier
+        |
+Structured extraction
+        |
+Zod schema validation
+        |
+Drug and lab validators
+        |
+Deterministic risk engine
+        |
+Green / Yellow / Red routing
+        |
+Auto delivery seam / Pharmacist queue / Doctor queue
+        |
+TTS + delivery adapter
+        |
+Audit, review tasks, family memory
+```
 
-Red path: emergency terms, critical lab values, pregnancy, child patient, chemotherapy, insulin, anticoagulants, opioids, immunosuppressants, or severe ambiguity. Doctor review or urgent-care instruction is required.
+Key implementation areas:
 
-## Initial Stack
+- `src/core/pipeline.mjs` - intake, consent, extraction, validation, risk, routing.
+- `src/core/risk-engine.mjs` - deterministic green/yellow/red rules.
+- `src/core/review-service.mjs` - review edit, approve, escalate.
+- `src/core/pharmacy-os.mjs` - pharmacy care desk summary layer.
+- `src/core/pilot-readiness.mjs` - pilot templates, consent, readiness, erasure.
+- `src/store/*` - memory and Neon-shaped store adapters.
+- `frontend/pharmacist-crm.html` - API-backed pharmacist CRM.
+- `experimental/baileys-transport/*` - internal WhatsApp dev bridge.
 
-- WhatsApp Business API through AiSensy or Gupshup.
-- Backend in Node.js and TypeScript.
-- Fastify API.
-- Neon Postgres for durable data.
-- S3-compatible private object storage for prescriptions, lab reports, and voice files.
-- BullMQ and Redis for queues.
-- Crof/Nahcrof for structured extraction when possible, with Gemini vision fallback for image-heavy cases.
-- Rule engine for risk routing.
-- Bhashini TTS first, Sarvam or ElevenLabs fallback.
-- Next.js pharmacist dashboard.
-- Stripe and Razorpay for subscriptions.
+## GSD Phase Status
 
-## Repository Status
+| Phase | Status | Output |
+|---|---|---|
+| 1 Durable Core | implemented-l1 | Neon schema, storage seam, duplicate guard, fixtures |
+| 2 Crof Extraction | implemented-l1 | Crof/Nahcrof adapter path, validation, fallback routing |
+| 3 Review Workflow | implemented-l1 | Review APIs, edits, approval, escalation |
+| 4 Voice Delivery | implemented-l1 | TTS artifacts, Baileys dev delivery, WABA seam |
+| 5 Pharmacist CRM | implemented-l1 | Management-accountant style CRM and pharmacy OS surface |
+| 6 Pilot Readiness | implemented-l1 | WABA templates, consent, erasure, monitoring, runbooks |
 
-This repository is now an L1 implementation package across the planned GSD phases. It contains:
+## Production Gaps
 
-- WhatsApp webhook service.
-- Document extraction workers.
-- Risk engine.
-- Pharmacist review dashboard.
-- Consent and audit-log system.
-- Test fixtures using synthetic prescriptions and lab reports only.
-- Pilot readiness and public-safe operating documentation.
+Before any real pilot:
 
-No real patient documents, phone numbers, prescriptions, or medical records should ever be committed.
+- Verify Neon migrations against a real database.
+- Replace local object storage stubs with private S3-compatible storage.
+- Add authentication and role-based access control.
+- Submit and approve WABA templates.
+- Implement production WABA delivery.
+- Connect real Sarvam/Bhashini TTS output.
+- Complete clinical advisor signoff for rule packs and lab thresholds.
+- Run only founder/operator-supervised cases with `NUSKHA_PILOT_MODE=true`.
 
-## Key Documents
+## Verification
 
-- [L1 Core Product Steps](./docs/L1_CORE_PRODUCT_STEPS.md)
-- [Technical Structure](./docs/TECHNICAL_STRUCTURE.md)
-- [Technical Implementation Research](./docs/TECHNICAL_IMPLEMENTATION_RESEARCH.md)
-- [Readiness Check](./docs/READINESS_CHECK.md)
-- [Pilot Readiness](./docs/PILOT_READINESS.md)
+Current public snapshot verification:
+
+```bash
+npm test
+npm run check
+npm run fixtures
+```
+
+Expected baseline:
+
+- 20 tests passing.
+- Static syntax checks passing.
+- Synthetic fixtures for green, yellow, red, lab, and unsupported cases passing.
+
+## Documents
+
 - [Public Release Snapshot](./docs/PUBLIC_RELEASE.md)
-- [Chatbot Context](./docs/CHATBOT_CONTEXT.md)
-- [Pharmacist CRM Idea](./docs/PHARMACIST_CRM_IDEA.md)
-- [Competitor Gap Analysis](./docs/COMPETITOR_GAP_ANALYSIS.md)
-- [Pharmacist CRM Frontend Prompt](./docs/PHARMACIST_CRM_FRONTEND_PROMPT.md)
-- [Static Pharmacist CRM Prototype](./frontend/pharmacist-crm.html)
-- [GSD Phase Index](./.planning/PHASES.md)
 - [Business Case](./BUSINESS_CASE.md)
-- [Core Algorithm](./CORE_ALGORITHM.md)
 - [Product Definition](./PRODUCT.md)
+- [Core Algorithm](./CORE_ALGORITHM.md)
+- [Technical Structure](./docs/TECHNICAL_STRUCTURE.md)
+- [L1 Core Product Steps](./docs/L1_CORE_PRODUCT_STEPS.md)
+- [Pilot Readiness](./docs/PILOT_READINESS.md)
 - [Open Source Boundary](./docs/OPEN_SOURCE_BOUNDARY.md)
-- [Baileys Dev Transport](./experimental/baileys-transport/README.md)
+- [Competitor Gap Analysis](./docs/COMPETITOR_GAP_ANALYSIS.md)
+- [GSD Phase Index](./.planning/PHASES.md)
+
+## License
+
+See [LICENSE](./LICENSE).
