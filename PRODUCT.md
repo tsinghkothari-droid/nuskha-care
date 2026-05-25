@@ -109,6 +109,22 @@ Reviewer cards must show:
 
 Target pharmacist review time: 2 to 3 minutes per yellow case.
 
+## Pharmacist CRM Expansion
+
+Nuskha can also become a CRM for neighborhood pharmacists who want to operate like a modern digital-care desk without becoming a big e-commerce company.
+
+The pharmacist CRM should include:
+
+- Prescription inbox from WhatsApp and walk-ins.
+- Patient ledger with medicines, allergies, doctors, documents, voice notes, and follow-ups.
+- Refill pipeline showing medicines likely to run out soon.
+- Family WhatsApp CRM for parent and child communication.
+- Counselling script workspace with safety guardrails.
+- Business desk for pending reviews, refill value at risk, doctor escalations, failed deliveries, and care revenue.
+- Bounded chatbot assistant using structured case context.
+
+This CRM is not a generic sales CRM. It is a pharmacy care ledger plus workflow system. It helps pharmacists remember patients, explain prescriptions safely, follow up without spam, and retain chronic-care families.
+
 ## Subscription
 
 Initial plan:
@@ -124,4 +140,3 @@ Initial plan:
 Parent voice notes listened per family per month.
 
 This is stronger than signups or documents sent because it measures whether the parent actually received help.
-

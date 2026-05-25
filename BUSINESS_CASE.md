@@ -82,6 +82,24 @@ Nuskha Care is optimized for interpretation and family coordination. It does not
 
 The wedge is small enough that large players may ignore it, but painful enough that families will pay.
 
+## Pharmacist CRM Opportunity
+
+The second buyer can be the neighborhood pharmacist.
+
+Local pharmacies already have chronic-care customers, refill behavior, and trusted relationships. What they usually lack is structured patient memory, safe counselling scripts, follow-up workflows, family communication, and business visibility.
+
+Nuskha can become a pharmacist CRM that helps a normal pharmacy offer a Tata 1mg-style care desk:
+
+- Prescription inbox.
+- Patient ledger.
+- Refill pipeline.
+- WhatsApp family communication.
+- Pharmacist review workflow.
+- Care chatbot assistant.
+- Revenue and workload dashboard.
+
+This gives the pharmacy a reason to pay even if the family subscription wedge is still early. The pharmacist pays because the CRM protects repeat chronic-care revenue, reduces missed follow-ups, and makes the pharmacy feel professionally managed.
+
 ## Why GitHub
 
 A public GitHub repository helps Nuskha Care in four ways.
@@ -190,4 +208,3 @@ Nuskha Care should stop or pivot if:
 Nuskha Care wins if it becomes the trusted family layer between Indian medical paperwork and overseas caregivers.
 
 The product starts as voice explanation. The platform becomes longitudinal family medical context.
-

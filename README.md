@@ -119,6 +119,7 @@ No real patient documents, phone numbers, prescriptions, or medical records shou
 - [Technical Implementation Research](./docs/TECHNICAL_IMPLEMENTATION_RESEARCH.md)
 - [Readiness Check](./docs/READINESS_CHECK.md)
 - [Chatbot Context](./docs/CHATBOT_CONTEXT.md)
+- [Pharmacist CRM Idea](./docs/PHARMACIST_CRM_IDEA.md)
 - [Pharmacist CRM Frontend Prompt](./docs/PHARMACIST_CRM_FRONTEND_PROMPT.md)
 - [GSD Phase Index](./.planning/PHASES.md)
 - [Business Case](./BUSINESS_CASE.md)

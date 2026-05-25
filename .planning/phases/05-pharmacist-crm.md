@@ -12,16 +12,17 @@ Build the first pharmacist CRM/dashboard as a serious care-management console, v
 4. Add patient ledger view: family, medicines, allergies, lab trend notes, documents, conversations, and follow-ups.
 5. Add pharmacy operations view: refill due, pending reviews, doctor escalations, failed deliveries, revenue/plan state.
 6. Add chatbot assistant panel using the context contract in `src/core/chatbot-context.mjs`.
-7. Keep UI dense, quiet, and highly scannable.
+7. Add pharmacist CRM modules from `docs/PHARMACIST_CRM_IDEA.md`: prescription inbox, patient ledger, refill pipeline, family WhatsApp CRM, counselling scripts, and business desk.
+8. Keep UI dense, quiet, and highly scannable.
 
 ## Exit Criteria
 
 - Pharmacist can process a yellow case in under 3 minutes in local demo.
 - Dashboard exposes risk reasons and audit status on every case.
 - Chatbot uses bounded context and cannot invent clinical facts.
+- CRM shows patient ledger, refill pipeline, family communication state, and pharmacy business desk.
 - `npm test` and `npm run check` pass.
 
 ## Execution Log
 
 - Pending.
-
