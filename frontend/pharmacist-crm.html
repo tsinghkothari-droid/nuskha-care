@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuskha Pharmacist CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#17202a",
+              muted: "#687381",
+              line: "#d9dee5",
+              panel: "#ffffff",
+              canvas: "#f5f7fa",
+              green: "#12715b",
+              amber: "#9a5b00",
+              red: "#b42318"
+            },
+            boxShadow: {
+              ledger: "0 1px 0 rgba(15, 23, 42, 0.04), 0 12px 30px rgba(15, 23, 42, 0.06)"
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      .scrollbar-thin::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #c8cfd8;
+        border-radius: 999px;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen overflow-auto bg-canvas text-ink lg:h-screen lg:overflow-hidden">
+    <div class="min-h-screen lg:grid lg:h-screen lg:grid-cols-[236px_minmax(0,1fr)]">
+      <aside class="hidden border-r border-line bg-white lg:block">
+        <div class="border-b border-line px-5 py-4">
+          <div class="text-[15px] font-semibold leading-tight">Nuskha Care</div>
+          <div class="mt-1 text-xs text-muted">Sharma Medicos Care Desk</div>
+        </div>
+
+        <nav class="space-y-1 px-3 py-4 text-sm">
+          <a class="flex items-center justify-between rounded-md bg-slate-900 px-3 py-2 font-medium text-white" href="#">
+            <span>Work Queue</span>
+            <span class="text-xs text-slate-300">18</span>
+          </a>
+          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
+            <span>Patients</span>
+            <span class="text-xs text-muted">642</span>
+          </a>
+          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
+            <span>Refills</span>
+            <span class="text-xs text-amber">31</span>
+          </a>
+          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
+            <span>WhatsApp</span>
+            <span class="text-xs text-red">4</span>
+          </a>
+          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
+            <span>Reports</span>
+            <span class="text-xs text-muted">May</span>
+          </a>
+          <a class="flex items-center rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">Settings</a>
+        </nav>
+
+        <div class="mx-3 mt-2 rounded-md border border-line bg-slate-50 p-3">
+          <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Today</div>
+          <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <div class="text-lg font-semibold">42</div>
+              <div class="text-muted">Care tasks</div>
+            </div>
+            <div>
+              <div class="text-lg font-semibold text-red">6</div>
+              <div class="text-muted">Red flags</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="flex min-w-0 flex-col">
+        <header class="flex min-h-16 shrink-0 flex-col gap-3 border-b border-line bg-white px-4 py-3 lg:h-16 lg:flex-row lg:items-center lg:justify-between lg:px-5 lg:py-0">
+          <div class="flex min-w-0 items-center gap-3">
+            <div>
+              <div class="text-sm font-semibold">Pharmacist CRM</div>
+              <div class="text-xs text-muted">Prescription inbox, patient ledger, refills, and family follow-up</div>
+            </div>
+          </div>
+
+          <div class="flex w-full flex-1 items-center justify-end gap-3 lg:w-auto">
+            <label class="relative w-full lg:w-[360px] lg:max-w-[36vw]">
+              <span class="sr-only">Search</span>
+              <input
+                class="h-9 w-full rounded-md border border-line bg-slate-50 px-3 text-sm outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500"
+                placeholder="Search patient, phone, medicine, prescription"
+              />
+            </label>
+            <div class="hidden items-center gap-2 border-l border-line pl-3 text-xs text-muted lg:flex">
+              <span><b class="font-semibold text-ink">18</b> pending</span>
+              <span><b class="font-semibold text-red">5</b> escalations</span>
+              <span><b class="font-semibold text-amber">4</b> failed</span>
+            </div>
+          </div>
+        </header>
+
+        <section class="grid min-h-0 flex-1 gap-4 overflow-auto p-3 xl:grid-cols-[minmax(520px,0.9fr)_minmax(440px,0.7fr)] xl:overflow-hidden xl:p-4">
+          <div class="flex min-w-0 flex-col gap-4 overflow-hidden">
+            <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                <div class="text-xs text-muted">Pending reviews</div>
+                <div class="mt-2 flex items-end justify-between">
+                  <span class="text-2xl font-semibold">18</span>
+                  <span class="text-xs text-red">5 red</span>
+                </div>
+              </div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                <div class="text-xs text-muted">Refill value at risk</div>
+                <div class="mt-2 flex items-end justify-between">
+                  <span class="text-2xl font-semibold">₹68k</span>
+                  <span class="text-xs text-amber">31 due</span>
+                </div>
+              </div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                <div class="text-xs text-muted">Avg review time</div>
+                <div class="mt-2 flex items-end justify-between">
+                  <span class="text-2xl font-semibold">2.4m</span>
+                  <span class="text-xs text-green">on target</span>
+                </div>
+              </div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                <div class="text-xs text-muted">Care revenue</div>
+                <div class="mt-2 flex items-end justify-between">
+                  <span class="text-2xl font-semibold">₹42k</span>
+                  <span class="text-xs text-muted">May</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+              <div class="flex items-center justify-between border-b border-line px-3 py-2">
+                <div>
+                  <h1 class="text-sm font-semibold">Work Queue</h1>
+                  <p class="text-xs text-muted">Prioritized by SLA, safety route, and failed delivery state</p>
+                </div>
+                <div class="flex gap-1 text-xs">
+                  <button class="rounded border border-slate-300 bg-slate-900 px-2 py-1 font-medium text-white">All</button>
+                  <button class="rounded border border-line px-2 py-1 text-slate-700">Red</button>
+                  <button class="rounded border border-line px-2 py-1 text-slate-700">Unknown</button>
+                  <button class="rounded border border-line px-2 py-1 text-slate-700">Refill due</button>
+                </div>
+              </div>
+
+              <div class="scrollbar-thin min-h-0 overflow-auto">
+                <table class="w-full border-collapse text-left text-sm">
+                  <thead class="sticky top-0 z-10 bg-slate-50 text-xs uppercase tracking-[0.08em] text-muted">
+                    <tr class="border-b border-line">
+                      <th class="px-3 py-2 font-semibold">SLA</th>
+                      <th class="px-3 py-2 font-semibold">Risk</th>
+                      <th class="px-3 py-2 font-semibold">Patient</th>
+                      <th class="px-3 py-2 font-semibold">Case</th>
+                      <th class="px-3 py-2 font-semibold">Language</th>
+                      <th class="px-3 py-2 font-semibold">Status</th>
+                      <th class="px-3 py-2 font-semibold">Next action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-line">
+                    <tr class="bg-slate-900 text-white">
+                      <td class="px-3 py-2 text-xs font-medium">09m</td>
+                      <td class="px-3 py-2"><span class="rounded bg-red px-2 py-1 text-xs font-semibold text-white">Red</span></td>
+                      <td class="px-3 py-2">
+                        <div class="font-medium">Asha Mehta</div>
+                        <div class="text-xs text-slate-300">Child: Rohan, Toronto</div>
+                      </td>
+                      <td class="px-3 py-2 text-xs">Prescription</td>
+                      <td class="px-3 py-2 text-xs">Hindi</td>
+                      <td class="px-3 py-2 text-xs">Doctor escalation</td>
+                      <td class="px-3 py-2 text-xs">Call family now</td>
+                    </tr>
+                    <tr>
+                      <td class="px-3 py-2 text-xs font-medium text-amber">18m</td>
+                      <td class="px-3 py-2"><span class="rounded bg-amber px-2 py-1 text-xs font-semibold text-white">Yellow</span></td>
+                      <td class="px-3 py-2">
+                        <div class="font-medium">Mahesh Iyer</div>
+                        <div class="text-xs text-muted">Child: Anika, Dubai</div>
+                      </td>
+                      <td class="px-3 py-2 text-xs">HbA1c lab</td>
+                      <td class="px-3 py-2 text-xs">Tamil</td>
+                      <td class="px-3 py-2 text-xs">Needs review</td>
+                      <td class="px-3 py-2 text-xs">Approve script</td>
+                    </tr>
+                    <tr>
+                      <td class="px-3 py-2 text-xs font-medium">24m</td>
+                      <td class="px-3 py-2"><span class="rounded bg-amber px-2 py-1 text-xs font-semibold text-white">Yellow</span></td>
+                      <td class="px-3 py-2">
+                        <div class="font-medium">Iqbal Khan</div>
+                        <div class="text-xs text-muted">Son: Sameer, NJ</div>
+                      </td>
+                      <td class="px-3 py-2 text-xs">Unknown medicine</td>
+                      <td class="px-3 py-2 text-xs">Urdu</td>
+                      <td class="px-3 py-2 text-xs">Unclear dose</td>
+                      <td class="px-3 py-2 text-xs">Request clearer photo</td>
+                    </tr>
+                    <tr>
+                      <td class="px-3 py-2 text-xs font-medium text-green">42m</td>
+                      <td class="px-3 py-2"><span class="rounded bg-green px-2 py-1 text-xs font-semibold text-white">Green</span></td>
+                      <td class="px-3 py-2">
+                        <div class="font-medium">Kamla Shah</div>
+                        <div class="text-xs text-muted">Daughter: Neha, London</div>
+                      </td>
+                      <td class="px-3 py-2 text-xs">Refill due</td>
+                      <td class="px-3 py-2 text-xs">Gujarati</td>
+                      <td class="px-3 py-2 text-xs">Ready</td>
+                      <td class="px-3 py-2 text-xs">Send reminder</td>
+                    </tr>
+                    <tr>
+                      <td class="px-3 py-2 text-xs font-medium">1h</td>
+                      <td class="px-3 py-2"><span class="rounded bg-amber px-2 py-1 text-xs font-semibold text-white">Yellow</span></td>
+                      <td class="px-3 py-2">
+                        <div class="font-medium">Dilip Rao</div>
+                        <div class="text-xs text-muted">Wife: Priya, Pune</div>
+                      </td>
+                      <td class="px-3 py-2 text-xs">Failed delivery</td>
+                      <td class="px-3 py-2 text-xs">Marathi</td>
+                      <td class="px-3 py-2 text-xs">WhatsApp failed</td>
+                      <td class="px-3 py-2 text-xs">Retry audio</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="grid gap-4 lg:h-[210px] lg:grid-cols-2">
+              <section class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+                <div class="border-b border-line px-3 py-2">
+                  <h2 class="text-sm font-semibold">Refill Pipeline</h2>
+                </div>
+                <div class="scrollbar-thin h-[166px] overflow-auto">
+                  <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 text-muted">
+                      <tr>
+                        <th class="px-3 py-2">Medicine</th>
+                        <th class="px-3 py-2">Patient</th>
+                        <th class="px-3 py-2">Days</th>
+                        <th class="px-3 py-2">Value</th>
+                        <th class="px-3 py-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-line">
+                      <tr><td class="px-3 py-2 font-medium">Telmisartan</td><td class="px-3 py-2">Kamla Shah</td><td class="px-3 py-2">3</td><td class="px-3 py-2">₹1,180</td><td class="px-3 py-2 text-amber">Due soon</td></tr>
+                      <tr><td class="px-3 py-2 font-medium">Thyronorm</td><td class="px-3 py-2">Dilip Rao</td><td class="px-3 py-2">5</td><td class="px-3 py-2">₹420</td><td class="px-3 py-2 text-green">Contacted</td></tr>
+                      <tr><td class="px-3 py-2 font-medium">Metformin</td><td class="px-3 py-2">Mahesh Iyer</td><td class="px-3 py-2">7</td><td class="px-3 py-2">₹860</td><td class="px-3 py-2">Draft ready</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+                <div class="border-b border-line px-3 py-2">
+                  <h2 class="text-sm font-semibold">Business Desk</h2>
+                </div>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-3 p-3 text-xs">
+                  <div><div class="text-muted">Refill recovery</div><div class="mt-1 text-lg font-semibold">₹22.4k</div></div>
+                  <div><div class="text-muted">Missed value</div><div class="mt-1 text-lg font-semibold text-red">₹8.7k</div></div>
+                  <div><div class="text-muted">Families active</div><div class="mt-1 text-lg font-semibold">146</div></div>
+                  <div><div class="text-muted">Review throughput</div><div class="mt-1 text-lg font-semibold">64/day</div></div>
+                  <div class="col-span-2 rounded bg-slate-50 p-2 text-muted">Owner note: thyroid and BP refill reminders are converting best this week.</div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div class="flex min-w-0 flex-col overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+            <div class="flex items-center justify-between border-b border-line px-4 py-3">
+              <div>
+                <h2 class="text-sm font-semibold">Case Detail: Asha Mehta</h2>
+                <p class="text-xs text-muted">Prescription, Hindi, rule version risk-rules-l1-2026-05-25</p>
+              </div>
+              <span class="rounded bg-red px-2 py-1 text-xs font-semibold text-white">Red path</span>
+            </div>
+
+            <div class="scrollbar-thin grid min-h-0 flex-1 gap-0 overflow-auto lg:grid-cols-2">
+              <section class="border-b border-line p-4 lg:border-b-0 lg:border-r">
+                <div class="mb-4 h-48 rounded-md border border-dashed border-slate-300 bg-slate-50 p-3">
+                  <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Document preview</div>
+                  <div class="mt-5 space-y-2 text-sm text-slate-700">
+                    <div class="h-3 w-2/3 rounded bg-slate-300"></div>
+                    <div class="h-3 w-1/2 rounded bg-slate-300"></div>
+                    <div class="h-3 w-4/5 rounded bg-slate-300"></div>
+                    <div class="mt-6 rounded border border-line bg-white p-2 text-xs">Rx Insulin 10 units OD. Chest pain mentioned.</div>
+                  </div>
+                </div>
+
+                <div class="space-y-3">
+                  <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Extracted facts</h3>
+                    <div class="mt-2 rounded-md border border-line">
+                      <div class="flex justify-between border-b border-line px-3 py-2 text-sm"><span>Insulin</span><span class="text-red">High risk</span></div>
+                      <div class="flex justify-between border-b border-line px-3 py-2 text-sm"><span>Dose</span><span>10 units</span></div>
+                      <div class="flex justify-between px-3 py-2 text-sm"><span>Frequency</span><span>Once daily</span></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Risk reasons</h3>
+                    <div class="mt-2 space-y-2 text-sm">
+                      <div class="rounded-md border border-red/30 bg-red/5 p-2"><span class="status-dot bg-red"></span> high_risk_medicine: insulin</div>
+                      <div class="rounded-md border border-red/30 bg-red/5 p-2"><span class="status-dot bg-red"></span> emergency_terms: chest pain</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Patient ledger</h3>
+                    <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
+                      <div class="rounded border border-line p-2"><div class="text-muted">Known medicines</div><div class="mt-1 font-medium">Metformin, Telmisartan</div></div>
+                      <div class="rounded border border-line p-2"><div class="text-muted">Doctor</div><div class="mt-1 font-medium">Dr. Kulkarni</div></div>
+                      <div class="rounded border border-line p-2"><div class="text-muted">Allergies</div><div class="mt-1 font-medium">None recorded</div></div>
+                      <div class="rounded border border-line p-2"><div class="text-muted">Last voice note</div><div class="mt-1 font-medium">12 May</div></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="flex min-h-[720px] flex-col">
+                <div class="border-b border-line p-4">
+                  <div class="mb-2 flex items-center justify-between">
+                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Parent voice script</h3>
+                    <span class="text-xs text-red">Doctor review required</span>
+                  </div>
+                  <textarea class="h-32 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500">Namaste. Is prescription me insulin dikh raha hai, jo high-risk medicine hai. Paper me chest pain ka sign bhi mila hai. Is case ko doctor review kare bina normal voice note send nahi karna chahiye. Agar chest pain ya saans ki dikkat ho to turant doctor ya emergency se baat karein.</textarea>
+                </div>
+
+                <div class="border-b border-line p-4">
+                  <div class="mb-2 flex items-center justify-between">
+                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Child summary</h3>
+                    <span class="text-xs text-muted">For Rohan</span>
+                  </div>
+                  <textarea class="h-24 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500">Red path. Insulin is present and chest pain was mentioned. Doctor review is required before final explanation. Do not change dose or substitute medicines without treating doctor's advice.</textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 border-b border-line p-4">
+                  <button class="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white">Send to Doctor</button>
+                  <button class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Request Clearer Photo</button>
+                  <button class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Regenerate Voice</button>
+                  <button class="rounded-md border border-red/40 px-3 py-2 text-sm font-semibold text-red">Hold Case</button>
+                </div>
+
+                <div class="border-b border-line p-4">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Care chatbot assistant</h3>
+                  <div class="mt-2 rounded-md border border-line bg-slate-50 p-3 text-sm leading-6">
+                    <p class="font-medium">Suggested next action</p>
+                    <p class="mt-1 text-muted">Do not send a normal explanation. Escalate to doctor because insulin and chest pain are both present. Ask family whether patient currently has chest pain, breathlessness, fainting, or bleeding.</p>
+                  </div>
+                </div>
+
+                <div class="p-4">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Audit timeline</h3>
+                  <div class="mt-3 space-y-3 text-xs">
+                    <div class="flex gap-2"><span class="mt-1 status-dot bg-slate-400"></span><div><b>12:08</b> WhatsApp image received</div></div>
+                    <div class="flex gap-2"><span class="mt-1 status-dot bg-amber"></span><div><b>12:08</b> Crof extraction confidence 0.78</div></div>
+                    <div class="flex gap-2"><span class="mt-1 status-dot bg-red"></span><div><b>12:09</b> Risk engine routed red</div></div>
+                    <div class="flex gap-2"><span class="mt-1 status-dot bg-red"></span><div><b>12:10</b> Doctor escalation pending</div></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

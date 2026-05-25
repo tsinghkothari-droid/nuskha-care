@@ -121,6 +121,7 @@ No real patient documents, phone numbers, prescriptions, or medical records shou
 - [Chatbot Context](./docs/CHATBOT_CONTEXT.md)
 - [Pharmacist CRM Idea](./docs/PHARMACIST_CRM_IDEA.md)
 - [Pharmacist CRM Frontend Prompt](./docs/PHARMACIST_CRM_FRONTEND_PROMPT.md)
+- [Static Pharmacist CRM Prototype](./frontend/pharmacist-crm.html)
 - [GSD Phase Index](./.planning/PHASES.md)
 - [Business Case](./BUSINESS_CASE.md)
 - [Core Algorithm](./CORE_ALGORITHM.md)
