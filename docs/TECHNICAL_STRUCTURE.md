@@ -77,7 +77,7 @@ Creates a delivery plan. The current implementation stubs voice generation and W
 
 `src/store/memory-store.mjs`
 
-In-memory placeholder for families, audit log, and review tasks. Later this becomes Supabase.
+In-memory placeholder for families, audit log, and review tasks. Later this becomes Neon Postgres.
 
 ## Current Code Boundary
 
@@ -98,7 +98,8 @@ Implemented now:
 
 Still to build:
 
-- Supabase persistence.
+- Neon Postgres persistence.
+- S3-compatible private object storage.
 - Real Gemini extraction.
 - Real drug table ingestion.
 - Bhashini/Sarvam TTS.

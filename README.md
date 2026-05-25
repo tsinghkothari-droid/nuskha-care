@@ -82,7 +82,8 @@ Red path: emergency terms, critical lab values, pregnancy, child patient, chemot
 - WhatsApp Business API through AiSensy or Gupshup.
 - Backend in Node.js and TypeScript.
 - Fastify API.
-- Supabase Postgres, Storage, Auth, and Realtime.
+- Neon Postgres for durable data.
+- S3-compatible private object storage for prescriptions, lab reports, and voice files.
 - BullMQ and Redis for queues.
 - Gemini Flash for structured extraction.
 - Rule engine for risk routing.

@@ -12,8 +12,8 @@ This note turns the GitHub/docs search into a concrete implementation plan for t
 - Sarvam REST stream TTS: `https://docs.sarvam.ai/api-reference-docs/text-to-speech/convert-stream`
 - Sarvam TTS overview: `https://docs.sarvam.ai/api-reference-docs/api-guides-tutorials/text-to-speech/overview`
 - Gemini structured outputs: `https://ai.google.dev/gemini-api/docs/structured-output`
-- Supabase signed upload URL: `https://supabase.com/docs/reference/javascript/storage-from-uploadtosignedurl`
-- Supabase resumable uploads: `https://supabase.com/docs/guides/storage/uploads/resumable-uploads`
+- Neon Postgres: `https://neon.com/docs`
+- S3-compatible private object storage for prescriptions, lab reports, and generated voice files.
 
 ## Target Technical Pipeline
 
@@ -65,9 +65,48 @@ Needed:
 - Signature or token verification on inbound webhook.
 - Template fallback when outside 24-hour WhatsApp session window.
 
-## 2. Document Storage
+## 2. Persistence And Document Storage
 
-Use Supabase Storage private bucket.
+Use Neon Postgres for durable relational data.
+
+Use S3-compatible private object storage for files. Good options:
+
+- Cloudflare R2.
+- AWS S3.
+- Backblaze B2 S3-compatible buckets.
+- Any India-region S3-compatible provider that supports private buckets and signed URLs.
+
+Neon should store metadata and workflow state. It should not store raw images or audio blobs.
+
+## Database
+
+Provider:
+
+```text
+Neon Postgres
+```
+
+Connection:
+
+```text
+DATABASE_URL=postgresql://...
+DATABASE_PROVIDER=neon
+```
+
+Needed module:
+
+```text
+src/db/neon.mjs
+```
+
+Use the `pg` package or a query builder later. Keep the first adapter thin:
+
+```js
+query(sql, params)
+withTransaction(fn)
+```
+
+## File Storage
 
 Bucket:
 
@@ -101,7 +140,7 @@ Implementation:
 
 - Server receives file from Baileys bridge or WABA media fetch.
 - Validate MIME type and size before upload.
-- Upload using service-role client from backend only.
+- Upload to private S3-compatible object storage from backend only.
 - Store only bucket/path in DB.
 - Generate short-lived signed URLs only for reviewer display.
 
@@ -363,7 +402,7 @@ Current memory store is in-process only.
 
 Needed:
 
-- Supabase Postgres tables.
+- Neon Postgres tables.
 - Append-only audit log.
 - Family context updates only after reviewed or validated facts.
 
@@ -394,14 +433,14 @@ Audit log:
 
 Build in this order:
 
-1. Supabase schema and persistence adapter.
+1. Neon schema and persistence adapter.
 2. Baileys reusable client plus send-text/send-audio dev adapter.
 3. Sarvam TTS adapter with local audio file output.
 4. Delivery adapter interface wired into pipeline.
 5. Review task APIs.
 6. Synthetic fixture runner for green/yellow/red.
 7. Gemini structured extractor.
-8. Supabase storage for inbound documents and generated audio.
+8. Private object storage for inbound documents and generated audio.
 9. Pharmacist dashboard.
 10. WABA production adapter.
 
@@ -418,6 +457,8 @@ src/tts/sarvam.mjs
 src/transport/baileys/client.mjs
 src/transport/baileys/send.mjs
 src/transport/delivery-adapter.mjs
+src/db/neon.mjs
+src/storage/object-storage.mjs
 test/tts-sarvam.test.mjs
 test/delivery-adapter.test.mjs
 ```
@@ -438,4 +479,3 @@ Acceptance:
 - Green-path delivery can use Baileys dev send for text first.
 - Audio send is behind `NUSKHA_ENABLE_DEV_SEND=true`.
 - Tests still pass without real API keys.
-

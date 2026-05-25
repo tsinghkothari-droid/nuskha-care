@@ -77,8 +77,8 @@ Run first 10 families manually with founder/operator review before every outboun
 
 Required:
 
-1. Supabase persistence for families, members, documents, consents, audit logs, review tasks, and voice notes.
-2. Encrypted object storage for uploaded documents.
+1. Neon Postgres persistence for families, members, documents, consents, audit logs, review tasks, and voice notes.
+2. Encrypted S3-compatible object storage for uploaded documents.
 3. Real WABA inbound webhook verification.
 4. WABA outbound send adapter.
 5. WhatsApp template pack approval.
@@ -273,7 +273,7 @@ Definition of done:
 
 Build these first:
 
-1. Supabase schema and persistence adapter.
+1. Neon schema and persistence adapter.
 2. Review task API: list, inspect, edit, approve, escalate.
 3. Fixture runner for green/yellow/red synthetic cases.
 4. Real WABA adapter interface with dev send stub.
@@ -284,7 +284,7 @@ Build these first:
 
 The current system is not ready for real families because:
 
-- It uses in-memory storage.
+- It uses in-memory storage instead of Neon Postgres.
 - It does not persist uploaded documents.
 - It does not have a reviewer dashboard.
 - It does not send real WhatsApp replies.
@@ -313,4 +313,3 @@ Not safe to demo as working healthcare product:
 - Real pharmacist review.
 - Real doctor review.
 - Real WhatsApp production workflow.
-
