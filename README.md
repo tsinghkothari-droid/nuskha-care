@@ -107,6 +107,7 @@ No real patient documents, phone numbers, prescriptions, or medical records shou
 
 - [L1 Core Product Steps](./docs/L1_CORE_PRODUCT_STEPS.md)
 - [Technical Structure](./docs/TECHNICAL_STRUCTURE.md)
+- [Technical Implementation Research](./docs/TECHNICAL_IMPLEMENTATION_RESEARCH.md)
 - [Readiness Check](./docs/READINESS_CHECK.md)
 - [Business Case](./BUSINESS_CASE.md)
 - [Core Algorithm](./CORE_ALGORITHM.md)
