@@ -10,7 +10,7 @@ test("CRM route serves real API-backed dashboard", async () => {
 
   assert.equal(response.statusCode, 200);
   assert.match(response.headers["content-type"], /text\/html/);
-  assert.match(response.body, /Real Work Queue/);
+  assert.match(response.body, /Work Queue/);
   assert.match(response.body, /\/review\/tasks/);
 });
 

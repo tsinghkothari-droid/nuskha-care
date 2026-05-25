@@ -32,4 +32,5 @@ Build the first pharmacist CRM/dashboard as a serious care-management console, v
 - 2026-05-25: CRM queue now loads from `/review/tasks`; edit, approve, escalate, reload, and seed actions call real backend APIs.
 - 2026-05-25: Added regression tests for `/crm` and CRM seed-to-review-task flow.
 - 2026-05-25: Connected CRM integration panel to real `/integrations/status`, live Nahcrof health check, Baileys profile status, and Baileys dev send endpoint.
+- 2026-05-25: Redesigned the CRM to match the approved management-accountant concept: sidebar ledger nav, top AI/WhatsApp chips, queue/accounting desk, right-side case command surface, assistant panel, audit timeline, and quick actions.
 - Remaining before production: add authentication, role permissions, real patient search, pagination, real refill scheduling, and move the UI into a maintainable Next.js app when the product surface stabilizes.

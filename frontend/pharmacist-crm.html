@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nuskha Pharmacist CRM</title>
+    <title>Nuskha Care Pharmacist CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -11,15 +11,15 @@
           extend: {
             colors: {
               ink: "#17202a",
-              muted: "#687381",
-              line: "#d9dee5",
-              canvas: "#f5f7fa",
-              green: "#12715b",
-              amber: "#9a5b00",
-              red: "#b42318"
+              muted: "#657180",
+              line: "#dfe4ea",
+              canvas: "#f6f8fb",
+              green: "#127a4a",
+              amber: "#b75e00",
+              red: "#c52920"
             },
             boxShadow: {
-              ledger: "0 1px 0 rgba(15, 23, 42, 0.04), 0 12px 30px rgba(15, 23, 42, 0.06)"
+              ledger: "0 1px 0 rgba(15,23,42,.04), 0 14px 36px rgba(15,23,42,.07)"
             }
           }
         }
@@ -28,73 +28,72 @@
     <style>
       body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
       .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
-      .scrollbar-thin::-webkit-scrollbar-thumb { background: #c8cfd8; border-radius: 999px; }
+      .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd3dd; border-radius: 999px; }
       .status-dot { width: 7px; height: 7px; border-radius: 999px; display: inline-block; }
+      .chip { border: 1px solid #dfe4ea; border-radius: 6px; padding: 5px 8px; font-size: 12px; line-height: 1; background: white; }
     </style>
   </head>
-  <body class="min-h-screen overflow-auto bg-canvas text-ink lg:h-screen lg:overflow-hidden">
-    <div class="min-h-screen lg:grid lg:h-screen lg:grid-cols-[236px_minmax(0,1fr)]">
-      <aside class="hidden border-r border-line bg-white lg:block">
-        <div class="border-b border-line px-5 py-4">
-          <div class="text-[15px] font-semibold leading-tight">Nuskha Care</div>
-          <div class="mt-1 text-xs text-muted">Live Pharmacist CRM</div>
+  <body class="min-h-screen bg-canvas text-ink lg:h-screen lg:overflow-hidden">
+    <div class="min-h-screen lg:grid lg:h-screen lg:grid-cols-[224px_minmax(0,1fr)]">
+      <aside class="hidden border-r border-line bg-white lg:flex lg:flex-col">
+        <div class="flex h-16 items-center gap-3 border-b border-line px-4">
+          <div class="grid h-9 w-9 place-items-center rounded-md bg-green text-lg font-bold text-white">N</div>
+          <div>
+            <div class="text-[15px] font-semibold leading-tight text-green">Nuskha Care</div>
+            <div class="text-xs text-muted">Pharmacist CRM</div>
+          </div>
         </div>
-        <nav class="space-y-1 px-3 py-4 text-sm">
-          <a class="flex items-center justify-between rounded-md bg-slate-900 px-3 py-2 font-medium text-white" href="#"><span>Work Queue</span><span id="navQueueCount" class="text-xs text-slate-300">0</span></a>
+
+        <nav class="flex-1 space-y-1 px-3 py-4 text-sm">
+          <a class="flex items-center justify-between rounded-md bg-green/10 px-3 py-2 font-semibold text-green" href="#"><span>Work Queue</span><span id="navQueueCount" class="rounded bg-white px-2 py-1 text-xs">0</span></a>
           <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#patients"><span>Patients</span><span id="navPatientCount" class="text-xs text-muted">0</span></a>
           <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#refills"><span>Refills</span><span id="navRefillCount" class="text-xs text-amber">0</span></a>
           <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#whatsapp"><span>WhatsApp</span><span id="navDeliveryCount" class="text-xs text-red">0</span></a>
           <a class="flex items-center rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#reports">Reports</a>
+          <a class="flex items-center rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#settings">Settings</a>
         </nav>
-        <div class="mx-3 mt-2 rounded-md border border-line bg-slate-50 p-3">
-          <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Connected API</div>
-          <div id="apiLabel" class="mt-2 break-all text-xs text-slate-700"></div>
-          <button id="seedBtn" class="mt-3 w-full rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white">Seed real demo cases</button>
-        </div>
-        <div class="mx-3 mt-3 rounded-md border border-line bg-white p-3">
-          <div class="flex items-center justify-between">
-            <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Integrations</div>
-            <button id="checkAiBtn" class="rounded border border-line px-2 py-1 text-[11px] font-semibold">Check AI</button>
-          </div>
-          <div class="mt-3 space-y-2 text-xs">
-            <div class="flex items-center justify-between gap-2">
-              <span>Nahcrof AI</span>
-              <span id="aiStatus" class="rounded bg-slate-100 px-2 py-1 text-muted">loading</span>
-            </div>
-            <div id="aiDetail" class="break-all text-[11px] leading-5 text-muted"></div>
-            <div class="flex items-center justify-between gap-2 border-t border-line pt-2">
-              <span>WhatsApp dev</span>
-              <span id="waStatus" class="rounded bg-slate-100 px-2 py-1 text-muted">loading</span>
-            </div>
-            <div id="waDetail" class="break-all text-[11px] leading-5 text-muted"></div>
-          </div>
+
+        <div class="m-3 rounded-md border border-line bg-slate-50 p-3 text-xs">
+          <div class="font-semibold text-ink">Pharmacy ID</div>
+          <div class="mt-1 text-muted">NC123456</div>
+          <div class="mt-3 font-semibold text-ink">Plan</div>
+          <div class="mt-1 text-muted">Pro, valid until 31 May 2025</div>
+          <button id="seedBtn" class="mt-3 w-full rounded-md bg-slate-900 px-3 py-2 font-semibold text-white">Seed real cases</button>
         </div>
       </aside>
 
       <main class="flex min-w-0 flex-col">
         <header class="flex min-h-16 shrink-0 flex-col gap-3 border-b border-line bg-white px-4 py-3 lg:h-16 lg:flex-row lg:items-center lg:justify-between lg:px-5 lg:py-0">
-          <div>
-            <div class="text-sm font-semibold">Pharmacist CRM</div>
-            <div id="syncStatus" class="text-xs text-muted">Loading real review queue...</div>
+          <div class="flex min-w-0 items-center gap-3">
+            <button class="hidden h-9 w-9 rounded-md border border-line text-lg lg:block">=</button>
+            <div>
+              <div class="text-sm font-semibold">Shree Sai Medical & General Stores</div>
+              <div id="syncStatus" class="text-xs text-muted">Loading real review queue...</div>
+            </div>
           </div>
-          <div class="flex w-full flex-1 items-center justify-end gap-3 lg:w-auto">
-            <input id="searchInput" class="h-9 w-full rounded-md border border-line bg-slate-50 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-500 lg:w-[360px] lg:max-w-[36vw]" placeholder="Search patient, phone, medicine, prescription" />
-            <button id="refreshBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Refresh</button>
+          <div class="flex min-w-0 flex-1 items-center justify-end gap-3">
+            <input id="searchInput" class="h-10 w-full rounded-md border border-line bg-white px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-500 lg:max-w-[520px]" placeholder="Search patient, mobile, Rx ID, doctor, case ID..." />
+            <div class="hidden items-center gap-2 xl:flex">
+              <span id="aiStatus" class="chip">AI</span>
+              <span id="waStatus" class="chip">WhatsApp</span>
+              <button id="checkAiBtn" class="chip font-semibold">Check AI</button>
+              <button id="refreshBtn" class="chip font-semibold">Refresh</button>
+            </div>
           </div>
         </header>
 
-        <section class="grid min-h-0 flex-1 gap-4 overflow-auto p-3 xl:grid-cols-[minmax(520px,0.9fr)_minmax(440px,0.7fr)] xl:overflow-hidden xl:p-4">
-          <div class="flex min-w-0 flex-col gap-4 overflow-hidden">
-            <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Pending reviews</div><div class="mt-2 flex items-end justify-between"><span id="kPending" class="text-2xl font-semibold">0</span><span id="kRed" class="text-xs text-red">0 red</span></div></div>
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Refill value at risk</div><div class="mt-2 flex items-end justify-between"><span id="kRefill" class="text-2xl font-semibold">₹0</span><span id="kRefillCount" class="text-xs text-amber">0 due</span></div></div>
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Avg review time</div><div class="mt-2 flex items-end justify-between"><span class="text-2xl font-semibold">2.4m</span><span class="text-xs text-green">target</span></div></div>
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Care revenue</div><div class="mt-2 flex items-end justify-between"><span id="kRevenue" class="text-2xl font-semibold">₹0</span><span class="text-xs text-muted">demo</span></div></div>
+        <section class="grid min-h-0 flex-1 gap-0 overflow-auto lg:grid-cols-[minmax(640px,0.92fr)_minmax(620px,1fr)] lg:overflow-hidden">
+          <div class="flex min-w-0 flex-col gap-3 border-r border-line p-3 lg:overflow-hidden">
+            <div class="grid grid-cols-2 gap-2 xl:grid-cols-4">
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Pending Reviews</div><div class="mt-2 flex items-end justify-between"><span id="kPending" class="text-2xl font-semibold">0</span><span id="kRed" class="text-xs text-red">0 red</span></div></div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Refill Value at Risk</div><div class="mt-2 flex items-end justify-between"><span id="kRefill" class="text-2xl font-semibold">₹0</span><span id="kRefillCount" class="text-xs text-amber">0 due</span></div></div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Doctor Escalations</div><div class="mt-2 flex items-end justify-between"><span id="bEscalations" class="text-2xl font-semibold">0</span><span class="text-xs text-red">SLA</span></div></div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Failed Deliveries</div><div class="mt-2 flex items-end justify-between"><span id="bDeliveries" class="text-2xl font-semibold">0</span><span class="text-xs text-muted">dev</span></div></div>
             </div>
 
-            <div class="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+            <div class="flex min-h-[360px] flex-1 flex-col overflow-hidden rounded-md border border-line bg-white shadow-ledger">
               <div class="flex items-center justify-between border-b border-line px-3 py-2">
-                <div><h1 class="text-sm font-semibold">Real Work Queue</h1><p class="text-xs text-muted">Loaded from `/review/tasks`; actions call review APIs</p></div>
+                <div><h1 class="text-sm font-semibold">Work Queue</h1><p class="text-xs text-muted">Loaded from `/review/tasks`; actions call live APIs</p></div>
                 <div class="flex gap-1 text-xs">
                   <button data-filter="all" class="filterBtn rounded border border-slate-300 bg-slate-900 px-2 py-1 font-medium text-white">All</button>
                   <button data-filter="red" class="filterBtn rounded border border-line px-2 py-1 text-slate-700">Red</button>
@@ -104,75 +103,102 @@
               </div>
               <div class="scrollbar-thin min-h-0 overflow-auto">
                 <table class="w-full border-collapse text-left text-sm">
-                  <thead class="sticky top-0 z-10 bg-slate-50 text-xs uppercase tracking-[0.08em] text-muted">
-                    <tr class="border-b border-line"><th class="px-3 py-2 font-semibold">SLA</th><th class="px-3 py-2 font-semibold">Risk</th><th class="px-3 py-2 font-semibold">Family</th><th class="px-3 py-2 font-semibold">Case</th><th class="px-3 py-2 font-semibold">Queue</th><th class="px-3 py-2 font-semibold">Status</th><th class="px-3 py-2 font-semibold">Next action</th></tr>
+                  <thead class="sticky top-0 z-10 bg-slate-50 text-xs text-muted">
+                    <tr class="border-b border-line"><th class="px-3 py-2 font-semibold">SLA</th><th class="px-3 py-2 font-semibold">Case ID</th><th class="px-3 py-2 font-semibold">Patient</th><th class="px-3 py-2 font-semibold">Case Type</th><th class="px-3 py-2 font-semibold">Status</th><th class="px-3 py-2 font-semibold">Next Action</th></tr>
                   </thead>
                   <tbody id="taskRows" class="divide-y divide-line"></tbody>
                 </table>
-                <div id="emptyState" class="hidden p-6 text-sm text-muted">No real review tasks yet. Click “Seed real demo cases” to create cases through the backend pipeline.</div>
+                <div id="emptyState" class="hidden p-6 text-sm text-muted">No real review tasks yet. Click “Seed real cases” to create backend cases.</div>
               </div>
             </div>
 
-            <div class="grid gap-4 lg:h-[210px] lg:grid-cols-2">
+            <div class="grid gap-3 xl:h-[250px] xl:grid-cols-[1.1fr_.9fr]">
               <section id="refills" class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
                 <div class="border-b border-line px-3 py-2"><h2 class="text-sm font-semibold">Refill Pipeline</h2></div>
-                <div class="scrollbar-thin h-[166px] overflow-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-muted"><tr><th class="px-3 py-2">Medicine</th><th class="px-3 py-2">Family</th><th class="px-3 py-2">Days</th><th class="px-3 py-2">Value</th><th class="px-3 py-2">Status</th></tr></thead><tbody id="refillRows" class="divide-y divide-line"></tbody></table></div>
+                <div class="scrollbar-thin h-[202px] overflow-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-muted"><tr><th class="px-3 py-2">Medicine</th><th class="px-3 py-2">Family</th><th class="px-3 py-2">Days</th><th class="px-3 py-2">Value</th><th class="px-3 py-2">Status</th></tr></thead><tbody id="refillRows" class="divide-y divide-line"></tbody></table></div>
               </section>
               <section id="reports" class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
                 <div class="border-b border-line px-3 py-2"><h2 class="text-sm font-semibold">Business Desk</h2></div>
                 <div class="grid grid-cols-2 gap-x-4 gap-y-3 p-3 text-xs">
-                  <div><div class="text-muted">Review tasks</div><div id="bReviews" class="mt-1 text-lg font-semibold">0</div></div>
-                  <div><div class="text-muted">Escalations</div><div id="bEscalations" class="mt-1 text-lg font-semibold text-red">0</div></div>
+                  <div><div class="text-muted">Care revenue</div><div id="kRevenue" class="mt-1 text-lg font-semibold">₹0</div></div>
                   <div><div class="text-muted">Families active</div><div id="bFamilies" class="mt-1 text-lg font-semibold">0</div></div>
-                  <div><div class="text-muted">Deliveries</div><div id="bDeliveries" class="mt-1 text-lg font-semibold">0</div></div>
+                  <div><div class="text-muted">Review tasks</div><div id="bReviews" class="mt-1 text-lg font-semibold">0</div></div>
+                  <div><div class="text-muted">AI / WhatsApp</div><div id="businessState" class="mt-1 text-lg font-semibold text-green">--</div></div>
                   <div id="businessNote" class="col-span-2 rounded bg-slate-50 p-2 text-muted">Business desk updates from live store state.</div>
                 </div>
               </section>
             </div>
           </div>
 
-          <div class="flex min-w-0 flex-col overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+          <div class="flex min-w-0 flex-col overflow-hidden bg-white">
             <div class="flex items-center justify-between border-b border-line px-4 py-3">
-              <div><h2 id="caseTitle" class="text-sm font-semibold">Case Detail</h2><p id="caseSubtitle" class="text-xs text-muted">Select a real queue row</p></div>
-              <span id="riskBadge" class="rounded bg-slate-200 px-2 py-1 text-xs font-semibold text-slate-700">No case</span>
+              <div class="flex min-w-0 items-center gap-3">
+                <button class="text-lg">&lt;</button>
+                <div><h2 id="caseTitle" class="text-sm font-semibold">Case Detail</h2><p id="caseSubtitle" class="text-xs text-muted">Select a real queue row</p></div>
+                <span id="riskBadge" class="rounded bg-slate-200 px-2 py-1 text-xs font-semibold text-slate-700">No case</span>
+              </div>
+              <div class="hidden gap-3 text-xs text-muted xl:flex"><span id="aiDetail">AI loading</span><span id="waDetail">WA loading</span></div>
             </div>
-            <div class="scrollbar-thin grid min-h-0 flex-1 gap-0 overflow-auto lg:grid-cols-2">
-              <section class="border-b border-line p-4 lg:border-b-0 lg:border-r">
-                <div class="mb-4 rounded-md border border-dashed border-slate-300 bg-slate-50 p-3">
-                  <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Source text</div>
-                  <div id="sourceText" class="mt-3 min-h-28 rounded border border-line bg-white p-2 text-xs text-slate-700">No case selected.</div>
-                </div>
-                <div class="space-y-3">
-                  <div><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Validated facts</h3><div id="factList" class="mt-2 rounded-md border border-line text-sm"></div></div>
-                  <div><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Risk reasons</h3><div id="riskReasons" class="mt-2 space-y-2 text-sm"></div></div>
-                  <div id="patients"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Patient ledger</h3><div id="patientLedger" class="mt-2 grid grid-cols-2 gap-2 text-xs"></div></div>
-                </div>
-              </section>
-              <section class="flex min-h-[720px] flex-col">
-                <div class="border-b border-line p-4">
-                  <div class="mb-2 flex items-center justify-between"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Parent voice script</h3><span id="reviewNeed" class="text-xs text-muted">Review state</span></div>
-                  <textarea id="parentScript" class="h-32 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500"></textarea>
-                </div>
-                <div class="border-b border-line p-4">
-                  <div class="mb-2 flex items-center justify-between"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Child summary</h3><span class="text-xs text-muted">Caregiver</span></div>
-                  <textarea id="childSummary" class="h-24 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500"></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-2 border-b border-line p-4">
-                  <button id="saveBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Save Edit</button>
-                  <button id="approveBtn" class="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white">Approve</button>
-                  <button id="escalateBtn" class="rounded-md border border-red/40 px-3 py-2 text-sm font-semibold text-red">Escalate</button>
-                  <button id="sendWhatsappBtn" class="rounded-md border border-green/40 px-3 py-2 text-sm font-semibold text-green">Send WhatsApp</button>
-                  <button id="reloadTaskBtn" class="col-span-2 rounded-md border border-line px-3 py-2 text-sm font-semibold">Reload Case</button>
-                </div>
-                <div class="border-b border-line p-4">
-                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Care chatbot assistant</h3>
-                  <div id="assistantPanel" class="mt-2 rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 text-muted">Select a case to build a bounded assistant note from real risk context.</div>
-                </div>
-                <div id="whatsapp" class="p-4">
-                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Audit and delivery state</h3>
+
+            <div class="scrollbar-thin min-h-0 flex-1 overflow-auto p-3">
+              <div class="grid gap-3 xl:grid-cols-[1fr_1fr_1fr_1.15fr]">
+                <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Prescription / Document</h3>
+                  <div id="sourceText" class="mt-3 min-h-36 rounded border border-dashed border-slate-300 bg-slate-50 p-3 text-xs leading-5 text-slate-700">No case selected.</div>
+                </section>
+                <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Extracted Facts</h3>
+                  <div id="factList" class="mt-3 rounded-md border border-line text-sm"></div>
+                </section>
+                <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Risk Reasons</h3>
+                  <div id="riskReasons" class="mt-3 space-y-2 text-sm"></div>
+                </section>
+                <section id="patients" class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Patient Ledger</h3>
+                  <div id="patientLedger" class="mt-3 grid grid-cols-2 gap-2 text-xs"></div>
+                </section>
+              </div>
+
+              <div class="mt-3 grid gap-3 xl:grid-cols-[1fr_1fr_.95fr]">
+                <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <div class="mb-2 flex items-center justify-between"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Parent Voice Script</h3><span id="reviewNeed" class="text-xs text-muted">Review state</span></div>
+                  <textarea id="parentScript" class="h-44 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500"></textarea>
+                  <div class="mt-2 text-xs text-muted">Script is used by approve/send flows.</div>
+                </section>
+                <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <div class="mb-2 flex items-center justify-between"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Child Summary</h3><span class="text-xs text-muted">Internal notes</span></div>
+                  <textarea id="childSummary" class="h-44 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500"></textarea>
+                  <div class="mt-2 text-xs text-muted">No diagnosis or dose change language allowed.</div>
+                </section>
+                <section class="rounded-md border border-green/30 bg-green/5 p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Nahcrof AI Assistant</h3>
+                  <div id="assistantPanel" class="mt-3 rounded-md border border-green/30 bg-white p-3 text-sm leading-6 text-muted">Select a case to build a bounded assistant note.</div>
+                  <button id="checkAiBtnInline" class="mt-3 w-full rounded-md border border-green/40 bg-white px-3 py-2 text-sm font-semibold text-green">Ask / Check Nahcrof</button>
+                </section>
+              </div>
+
+              <div class="mt-3 grid gap-3 xl:grid-cols-[1fr_1fr_.95fr]">
+                <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Audit Timeline</h3>
                   <div id="auditTimeline" class="mt-3 space-y-3 text-xs"></div>
-                </div>
-              </section>
+                </section>
+                <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Activity / Notes</h3>
+                  <textarea class="mt-3 h-20 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm outline-none" placeholder="Add internal note..."></textarea>
+                  <button class="mt-2 rounded-md bg-green px-3 py-2 text-xs font-semibold text-white">Add Note</button>
+                </section>
+                <section id="whatsapp" class="rounded-md border border-line bg-white p-3 shadow-ledger">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Quick Actions</h3>
+                  <div class="mt-3 grid gap-2">
+                    <button id="approveBtn" class="rounded-md bg-green px-3 py-3 text-sm font-semibold text-white">Approve & Mark Safe</button>
+                    <button id="escalateBtn" class="rounded-md border border-amber px-3 py-3 text-sm font-semibold text-amber">Escalate to Doctor</button>
+                    <button id="sendWhatsappBtn" class="rounded-md border border-green px-3 py-3 text-sm font-semibold text-green">Send WhatsApp Update</button>
+                    <button id="saveBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Save Edit</button>
+                    <button id="reloadTaskBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Reload Case</button>
+                  </div>
+                </section>
+              </div>
             </div>
           </div>
         </section>
@@ -188,27 +214,25 @@
       let activeFilter = "all";
 
       const $ = (id) => document.getElementById(id);
-      const riskClass = (risk) => risk === "red" ? "bg-red text-white" : risk === "yellow" ? "bg-amber text-white" : "bg-green text-white";
       const rupees = (value) => `₹${Number(value || 0).toLocaleString("en-IN")}`;
+      const riskClass = (risk) => risk === "red" ? "bg-red text-white" : risk === "yellow" ? "bg-amber text-white" : "bg-green text-white";
 
-      $("apiLabel").textContent = API_BASE;
-      $("refreshBtn").addEventListener("click", loadAll);
       $("seedBtn").addEventListener("click", seedFixtures);
+      $("refreshBtn").addEventListener("click", loadAll);
       $("checkAiBtn").addEventListener("click", checkAi);
-      $("reloadTaskBtn").addEventListener("click", () => selectedTask && selectTask(selectedTask.id));
+      $("checkAiBtnInline").addEventListener("click", checkAi);
       $("saveBtn").addEventListener("click", saveSelected);
       $("approveBtn").addEventListener("click", approveSelected);
       $("escalateBtn").addEventListener("click", escalateSelected);
       $("sendWhatsappBtn").addEventListener("click", sendSelectedWhatsapp);
+      $("reloadTaskBtn").addEventListener("click", () => selectedTask && selectTask(selectedTask.id));
       $("searchInput").addEventListener("input", render);
-      document.querySelectorAll(".filterBtn").forEach((button) => {
-        button.addEventListener("click", () => {
-          activeFilter = button.dataset.filter;
-          document.querySelectorAll(".filterBtn").forEach((item) => item.className = "filterBtn rounded border border-line px-2 py-1 text-slate-700");
-          button.className = "filterBtn rounded border border-slate-300 bg-slate-900 px-2 py-1 font-medium text-white";
-          render();
-        });
-      });
+      document.querySelectorAll(".filterBtn").forEach((button) => button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll(".filterBtn").forEach((item) => item.className = "filterBtn rounded border border-line px-2 py-1 text-slate-700");
+        button.className = "filterBtn rounded border border-slate-300 bg-slate-900 px-2 py-1 font-medium text-white";
+        render();
+      }));
 
       async function api(path, options = {}) {
         const response = await fetch(`${API_BASE}${path}`, {
@@ -221,35 +245,17 @@
       }
 
       async function loadAll() {
-        $("syncStatus").textContent = "Syncing with backend...";
+        $("syncStatus").textContent = "Syncing backend...";
         try {
-          const [taskResult, stateResult, integrationResult] = await Promise.all([
-            api("/review/tasks"),
-            api("/dev/state"),
-            api("/integrations/status")
-          ]);
+          const [taskResult, stateResult, integrationResult] = await Promise.all([api("/review/tasks"), api("/dev/state"), api("/integrations/status")]);
           tasks = taskResult.tasks || [];
           state = stateResult.state || {};
           integrations = integrationResult || {};
           if (!selectedTask && tasks.length) selectedTask = tasks[0];
           render();
-          renderIntegrations();
           $("syncStatus").textContent = `Live: ${tasks.length} review task(s), ${(state.families || []).length} family record(s)`;
         } catch (error) {
-          $("syncStatus").textContent = `Backend not reachable: ${error.message}. Start npm run dev:api, then refresh.`;
-        }
-      }
-
-      async function checkAi() {
-        $("aiStatus").textContent = "checking";
-        $("aiStatus").className = "rounded bg-amber px-2 py-1 text-white";
-        try {
-          const result = await api("/integrations/ai/check", { method: "POST", body: {} });
-          integrations.aiHealth = result;
-          renderIntegrations();
-        } catch (error) {
-          integrations.aiHealth = { ok: false, status: error.message };
-          renderIntegrations();
+          $("syncStatus").textContent = `Backend not reachable: ${error.message}`;
         }
       }
 
@@ -258,6 +264,17 @@
         await api("/dev/seed-fixtures", { method: "POST", body: {} });
         selectedTask = null;
         await loadAll();
+      }
+
+      async function checkAi() {
+        $("aiStatus").textContent = "checking";
+        $("aiStatus").className = "chip bg-amber text-white";
+        try {
+          integrations.aiHealth = await api("/integrations/ai/check", { method: "POST", body: {} });
+        } catch (error) {
+          integrations.aiHealth = { ok: false, status: error.message };
+        }
+        renderIntegrations();
       }
 
       function render() {
@@ -273,28 +290,14 @@
         const aiHealth = integrations.aiHealth || null;
         const wa = integrations.whatsapp || {};
         const aiOk = aiHealth ? aiHealth.ok : ai.configured;
-        $("aiStatus").textContent = aiOk ? "ready" : "not ready";
-        $("aiStatus").className = `rounded px-2 py-1 ${aiOk ? "bg-green text-white" : "bg-amber text-white"}`;
-        $("aiDetail").textContent = aiHealth
-          ? `${aiHealth.provider || ai.provider || "ai"} ${aiHealth.model || ai.model || ""}: ${aiHealth.status || "checked"}`
-          : `${ai.provider || "provider"} / ${ai.extractionProvider || "extractor"} / ${ai.model || "model"}${ai.configured ? "" : " / missing env"}`;
-
+        $("aiStatus").textContent = `Nahcrof AI ${aiOk ? "Ready" : "Check"}`;
+        $("aiStatus").className = `chip ${aiOk ? "bg-green text-white" : "bg-amber text-white"}`;
+        $("aiDetail").textContent = aiHealth ? `${aiHealth.provider || ai.provider} ${aiHealth.model || ""}: ${aiHealth.status}` : `${ai.provider || "provider"} / ${ai.model || "model"}`;
         const waReady = Boolean(wa.sendAvailable);
-        $("waStatus").textContent = waReady ? "paired" : "login needed";
-        $("waStatus").className = `rounded px-2 py-1 ${waReady ? "bg-green text-white" : "bg-amber text-white"}`;
-        $("waDetail").textContent = waReady
-          ? `${wa.profile || "profile"} as ${wa.connectedAs || "stored session"}${wa.bridgeRunning ? " / bridge on" : " / bridge off"}`
-          : `Run npm run dev:baileys:login -- nuskha-dev --stay-alive`;
-      }
-
-      function visibleTasks() {
-        const q = $("searchInput").value.trim().toLowerCase();
-        return tasks.filter((task) => {
-          const risk = task.risk?.path || "";
-          const haystack = JSON.stringify(task).toLowerCase();
-          if (activeFilter !== "all" && activeFilter !== risk && activeFilter !== task.queue) return false;
-          return !q || haystack.includes(q);
-        });
+        $("waStatus").textContent = `WhatsApp ${waReady ? "Paired" : "Login"}`;
+        $("waStatus").className = `chip ${waReady ? "bg-green text-white" : "bg-amber text-white"}`;
+        $("waDetail").textContent = waReady ? `${wa.profile || "profile"} as ${wa.connectedAs || "stored session"}${wa.bridgeRunning ? " / bridge on" : " / bridge off"}` : "Run Baileys login";
+        $("businessState").textContent = aiOk && waReady ? "Ready" : "Setup";
       }
 
       function renderMetrics() {
@@ -315,9 +318,17 @@
         $("bEscalations").textContent = red;
         $("bFamilies").textContent = families.length;
         $("bDeliveries").textContent = deliveries.length;
-        $("businessNote").textContent = tasks.length
-          ? "Owner note: current workload is generated from real review tasks in the running backend."
-          : "Owner note: no open review tasks yet. Seed cases to populate live data.";
+        $("businessNote").textContent = tasks.length ? "Workload is generated from real review tasks in the backend." : "No open review tasks yet. Seed cases to populate live data.";
+      }
+
+      function visibleTasks() {
+        const q = $("searchInput").value.trim().toLowerCase();
+        return tasks.filter((task) => {
+          const risk = task.risk?.path || "";
+          const haystack = JSON.stringify(task).toLowerCase();
+          if (activeFilter !== "all" && activeFilter !== risk && activeFilter !== task.queue) return false;
+          return !q || haystack.includes(q);
+        });
       }
 
       function renderTasks() {
@@ -326,28 +337,21 @@
         $("taskRows").innerHTML = rows.map((task) => {
           const risk = task.risk?.path || "unknown";
           const active = selectedTask?.id === task.id;
-          const meds = task.validation?.medicines?.map((item) => item.normalizedName || item.name_guess).filter(Boolean).join(", ");
-          const labs = task.validation?.labValues?.map((item) => item.test_name).filter(Boolean).join(", ");
-          return `
-            <tr class="${active ? "bg-slate-900 text-white" : "hover:bg-slate-50"} cursor-pointer" data-task-id="${task.id}">
-              <td class="px-3 py-2 text-xs font-medium">${ageLabel(task.createdAt)}</td>
-              <td class="px-3 py-2"><span class="rounded px-2 py-1 text-xs font-semibold ${riskClass(risk)}">${risk}</span></td>
-              <td class="px-3 py-2"><div class="font-medium">${familyLabel(task.familyId)}</div><div class="text-xs ${active ? "text-slate-300" : "text-muted"}">${task.messageId || task.id}</div></td>
-              <td class="px-3 py-2 text-xs">${task.classification?.type || "case"}${meds || labs ? `<div class="${active ? "text-slate-300" : "text-muted"}">${meds || labs}</div>` : ""}</td>
-              <td class="px-3 py-2 text-xs">${task.queue}</td>
-              <td class="px-3 py-2 text-xs">${task.status}</td>
-              <td class="px-3 py-2 text-xs">${nextAction(task)}</td>
-            </tr>
-          `;
+          return `<tr class="${active ? "bg-slate-900 text-white" : "hover:bg-slate-50"} cursor-pointer" data-task-id="${task.id}">
+            <td class="px-3 py-2 text-xs font-medium ${risk === "red" && !active ? "text-red" : ""}">${ageLabel(task.createdAt)}</td>
+            <td class="px-3 py-2 text-xs">${task.id}</td>
+            <td class="px-3 py-2"><div class="font-medium">${familyLabel(task.familyId)}</div><div class="text-xs ${active ? "text-slate-300" : "text-muted"}">${task.messageId || ""}</div></td>
+            <td class="px-3 py-2 text-xs">${task.classification?.type || "case"}</td>
+            <td class="px-3 py-2"><span class="rounded px-2 py-1 text-xs font-semibold ${riskClass(risk)}">${risk}</span></td>
+            <td class="px-3 py-2 text-xs">${nextAction(task)}</td>
+          </tr>`;
         }).join("");
         document.querySelectorAll("[data-task-id]").forEach((row) => row.addEventListener("click", () => selectTask(row.dataset.taskId)));
       }
 
       function renderRefills() {
         const rows = buildRefillRows();
-        $("refillRows").innerHTML = rows.length ? rows.map((row) => `
-          <tr><td class="px-3 py-2 font-medium">${row.medicine}</td><td class="px-3 py-2">${row.family}</td><td class="px-3 py-2">${row.days}</td><td class="px-3 py-2">${rupees(row.value)}</td><td class="px-3 py-2 text-amber">${row.status}</td></tr>
-        `).join("") : `<tr><td class="px-3 py-5 text-muted" colspan="5">No refill candidates from current real task data.</td></tr>`;
+        $("refillRows").innerHTML = rows.length ? rows.map((row) => `<tr><td class="px-3 py-2 font-medium">${row.medicine}</td><td class="whitespace-nowrap px-3 py-2">${row.family}</td><td class="px-3 py-2">${row.days}</td><td class="px-3 py-2">${rupees(row.value)}</td><td class="px-3 py-2 text-amber">${row.status}</td></tr>`).join("") : `<tr><td class="px-3 py-5 text-muted" colspan="5">No refill candidates from current task data.</td></tr>`;
       }
 
       function renderCase(task) {
@@ -365,15 +369,14 @@
           $("auditTimeline").innerHTML = "";
           return;
         }
-
         const risk = task.risk?.path || "unknown";
-        $("caseTitle").textContent = `Case Detail: ${familyLabel(task.familyId)}`;
-        $("caseSubtitle").textContent = `${task.classification?.type || "case"}, ${task.queue}, ${task.risk?.ruleVersion || "rule version pending"}`;
-        $("riskBadge").textContent = `${risk} path`;
+        $("caseTitle").textContent = `Case ID: ${task.id}`;
+        $("caseSubtitle").textContent = `${familyLabel(task.familyId)} / ${task.classification?.type || "case"} / ${task.risk?.ruleVersion || "rule version pending"}`;
+        $("riskBadge").textContent = `${risk} risk`;
         $("riskBadge").className = `rounded px-2 py-1 text-xs font-semibold ${riskClass(risk)}`;
-        $("sourceText").textContent = task.extraction?.medicines?.map((item) => item.raw_text).join(", ") || task.extraction?.lab_values?.map((item) => `${item.test_name} ${item.value}`).join(", ") || "Source media/text stored in inbound pipeline.";
+        $("sourceText").textContent = sourceLabel(task);
         $("factList").innerHTML = factRows(task);
-        $("riskReasons").innerHTML = (task.risk?.reasons || []).map((reason) => `<div class="rounded-md border border-${reason.level === "red" ? "red" : "amber"}/30 bg-${reason.level === "red" ? "red" : "amber"}/5 p-2"><span class="status-dot bg-${reason.level === "red" ? "red" : "amber"}"></span> ${reason.code}${reason.detail ? `: ${reason.detail}` : ""}</div>`).join("") || `<div class="rounded-md border border-line p-2 text-muted">No risk reasons recorded.</div>`;
+        $("riskReasons").innerHTML = (task.risk?.reasons || []).map((reason) => `<div class="rounded-md border border-line p-2"><span class="status-dot ${reason.level === "red" ? "bg-red" : "bg-amber"}"></span> ${reason.code}${reason.detail ? `: ${reason.detail}` : ""}</div>`).join("") || `<div class="rounded-md border border-line p-2 text-muted">No risk reasons recorded.</div>`;
         $("patientLedger").innerHTML = patientLedger(task);
         $("parentScript").value = task.draft?.parentScript || "";
         $("childSummary").value = task.draft?.childSummary || "";
@@ -392,47 +395,41 @@
 
       async function saveSelected() {
         if (!selectedTask) return;
-        await api(`/review/tasks/${selectedTask.id}/edit`, {
-          method: "POST",
-          body: { reviewerId: "crm_operator", draft: { parentScript: $("parentScript").value, childSummary: $("childSummary").value } }
-        });
+        await api(`/review/tasks/${selectedTask.id}/edit`, { method: "POST", body: { reviewerId: "crm_operator", draft: { parentScript: $("parentScript").value, childSummary: $("childSummary").value } } });
         await selectTask(selectedTask.id);
       }
 
       async function approveSelected() {
         if (!selectedTask) return;
-        await api(`/review/tasks/${selectedTask.id}/approve`, {
-          method: "POST",
-          body: { reviewerId: "crm_operator" }
-        });
+        await api(`/review/tasks/${selectedTask.id}/approve`, { method: "POST", body: { reviewerId: "crm_operator" } });
         await selectTask(selectedTask.id);
         await loadAll();
       }
 
       async function escalateSelected() {
         if (!selectedTask) return;
-        await api(`/review/tasks/${selectedTask.id}/escalate`, {
-          method: "POST",
-          body: { reviewerId: "crm_operator", reason: "Escalated from CRM" }
-        });
+        await api(`/review/tasks/${selectedTask.id}/escalate`, { method: "POST", body: { reviewerId: "crm_operator", reason: "Escalated from CRM" } });
         await selectTask(selectedTask.id);
       }
 
       async function sendSelectedWhatsapp() {
         if (!selectedTask) return;
         const phone = selectedTask.familyId?.replace(/^fam_/, "");
-        const text = $("parentScript").value || selectedTask.draft?.parentScript || selectedTask.draft?.childSummary || "";
+        const text = $("parentScript").value || selectedTask.draft?.childSummary || "";
         $("syncStatus").textContent = "Sending WhatsApp through Baileys dev session...";
         try {
-          const result = await api("/integrations/whatsapp/send", {
-            method: "POST",
-            body: { phone, text, profile: "nuskha-dev" }
-          });
+          const result = await api("/integrations/whatsapp/send", { method: "POST", body: { phone, text, profile: "nuskha-dev" } });
           $("syncStatus").textContent = `WhatsApp ${result.status}${result.messageId ? `: ${result.messageId}` : ""}`;
           await loadAll();
         } catch (error) {
           $("syncStatus").textContent = `WhatsApp send failed: ${error.message}`;
         }
+      }
+
+      function sourceLabel(task) {
+        const meds = task.extraction?.medicines?.map((item) => `${item.raw_text} ${item.dose || ""}`).join(", ");
+        const labs = task.extraction?.lab_values?.map((item) => `${item.test_name} ${item.value} ${item.unit || ""}`).join(", ");
+        return meds || labs || "Source media/text stored in inbound pipeline.";
       }
 
       function factRows(task) {
@@ -445,56 +442,26 @@
 
       function patientLedger(task) {
         const family = (state.families || []).find((item) => item.id === task.familyId) || {};
-        return [
-          ["Family", family.phone || familyLabel(task.familyId)],
-          ["Language", family.language || "hi"],
-          ["Known meds", (family.activeMedicines || []).map((item) => item.name).join(", ") || "Pending review"],
-          ["Lab trends", (family.labTrends || []).length || "None"]
-        ].map(([label, value]) => `<div class="rounded border border-line p-2"><div class="text-muted">${label}</div><div class="mt-1 font-medium">${value}</div></div>`).join("");
+        return [["Family", family.phone || familyLabel(task.familyId)], ["Language", family.language || "hi"], ["Known meds", (family.activeMedicines || []).map((item) => item.name).join(", ") || "Pending review"], ["Lab trends", (family.labTrends || []).length || "None"]].map(([label, value]) => `<div class="rounded border border-line p-2"><div class="text-muted">${label}</div><div class="mt-1 break-words font-medium">${value}</div></div>`).join("");
       }
 
       function assistantNote(task) {
         const risk = task.risk?.path;
         const missing = (task.risk?.reasons || []).filter((reason) => reason.code.includes("unknown") || reason.code.includes("ambiguous")).map((reason) => reason.code);
-        return `<p class="font-medium">Bounded next action</p><p class="mt-1 text-muted">${risk === "red" ? "Do not send a normal explanation. Keep doctor review path active." : risk === "yellow" ? "Pharmacist should confirm unclear facts, edit script, then approve." : "Green case can proceed after safety checks."} ${missing.length ? `Missing/unclear: ${missing.join(", ")}.` : ""}</p>`;
+        return `<p class="font-medium">${risk === "red" ? "High risk case" : risk === "yellow" ? "Pharmacist review" : "Ready after checks"}</p><p class="mt-1 text-muted">${risk === "red" ? "Do not send a normal explanation. Keep doctor review path active." : risk === "yellow" ? "Confirm unclear facts, edit script, then approve." : "Green case can proceed after safety checks."} ${missing.length ? `Missing/unclear: ${missing.join(", ")}.` : ""}</p>`;
       }
 
       function auditRows(task) {
-        return [
-          ["created", task.createdAt || "now", "bg-slate-400"],
-          ["risk", task.risk?.path || "unknown", task.risk?.path === "red" ? "bg-red" : task.risk?.path === "yellow" ? "bg-amber" : "bg-green"],
-          ["queue", task.queue || "unknown", "bg-slate-400"],
-          ["status", task.status || "open", "bg-slate-400"]
-        ].map(([label, value, color]) => `<div class="flex gap-2"><span class="mt-1 status-dot ${color}"></span><div><b>${label}</b> ${value}</div></div>`).join("");
+        return [["Case Created", task.createdAt || "now", "bg-green"], ["AI Extraction Completed", task.extraction?.overall_ocr_confidence || "n/a", "bg-green"], ["Risk Flagged", task.risk?.path || "unknown", task.risk?.path === "red" ? "bg-red" : "bg-amber"], ["Assigned", task.queue || "unknown", "bg-slate-400"]].map(([label, value, color]) => `<div class="flex gap-2"><span class="mt-1 status-dot ${color}"></span><div><b>${label}</b><br><span class="text-muted">${value}</span></div></div>`).join("");
       }
 
       function buildRefillRows() {
-        return tasks.flatMap((task, index) => (task.validation?.medicines || []).filter((medicine) => medicine.matchStatus === "matched").map((medicine) => ({
-          medicine: medicine.normalizedName,
-          family: familyLabel(task.familyId),
-          days: 3 + index * 2,
-          value: 420 + index * 260,
-          status: task.risk?.path === "red" ? "review before push" : "due soon"
-        })));
+        return tasks.flatMap((task, index) => (task.validation?.medicines || []).filter((medicine) => medicine.matchStatus === "matched").map((medicine) => ({ medicine: medicine.normalizedName, family: familyLabel(task.familyId), days: 3 + index * 2, value: 420 + index * 260, status: task.risk?.path === "red" ? "review before push" : "due soon" })));
       }
 
-      function familyLabel(familyId = "") {
-        return familyId.replace(/^fam_/, "+").replace(/(\+\d{2})(\d{5})(\d+)/, "$1 $2 $3") || "Unknown family";
-      }
-
-      function ageLabel(createdAt) {
-        if (!createdAt) return "now";
-        const diff = Math.max(0, Date.now() - new Date(createdAt).getTime());
-        const minutes = Math.round(diff / 60000);
-        return minutes < 60 ? `${minutes}m` : `${Math.round(minutes / 60)}h`;
-      }
-
-      function nextAction(task) {
-        if (task.status === "approved") return "Delivery recorded";
-        if (task.queue === "doctor") return "Doctor review";
-        if (task.risk?.path === "yellow") return "Approve script";
-        return "Review";
-      }
+      function familyLabel(familyId = "") { return familyId.replace(/^fam_/, "+").replace(/(\+\d{2})(\d{5})(\d+)/, "$1 $2 $3") || "Unknown family"; }
+      function ageLabel(createdAt) { if (!createdAt) return "now"; const minutes = Math.round(Math.max(0, Date.now() - new Date(createdAt).getTime()) / 60000); return minutes < 60 ? `${minutes}m` : `${Math.round(minutes / 60)}h`; }
+      function nextAction(task) { if (task.status === "approved") return "Delivered"; if (task.queue === "doctor") return "Escalate to Doctor"; if (task.risk?.path === "yellow") return "Verify & Approve"; return "Approve"; }
 
       loadAll();
     </script>
