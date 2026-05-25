@@ -160,9 +160,12 @@
                   <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Risk Reasons</h3>
                   <div id="riskReasons" class="mt-3 space-y-2 text-sm"></div>
                 </section>
-                <section id="patients" class="rounded-md border border-line bg-white p-3 shadow-ledger">
-                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Patient Ledger</h3>
-                  <div id="patientLedger" class="mt-3 grid grid-cols-2 gap-2 text-xs"></div>
+                <section id="patients" class="rounded-md border border-line bg-white shadow-ledger overflow-hidden flex flex-col">
+                  <div class="flex items-center justify-between px-3 py-2 border-b border-line">
+                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Patient Ledger</h3>
+                    <span id="patientPortalBadge" class="hidden rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide"></span>
+                  </div>
+                  <div id="patientLedger" class="flex-1 overflow-auto"></div>
                 </section>
               </div>
 
@@ -389,6 +392,7 @@
           $("factList").innerHTML = "";
           $("riskReasons").innerHTML = "";
           $("patientLedger").innerHTML = "";
+          const _badge = $("patientPortalBadge"); if (_badge) _badge.className = "hidden";
           $("parentScript").value = "";
           $("childSummary").value = "";
           $("assistantPanel").textContent = "No bounded context available yet.";
@@ -470,7 +474,74 @@
         const family = (state.families || []).find((item) => item.id === task.familyId) || {};
         const portal = (ops.patientFamilyPortal?.families || []).find((item) => item.familyId === task.familyId) || {};
         const adherence = (ops.adherenceTracking?.accounts || []).find((item) => item.familyId === task.familyId) || {};
-        return [["Family", family.phone || familyLabel(task.familyId)], ["Language", family.language || "hi"], ["Known meds", (family.activeMedicines || []).map((item) => item.name).join(", ") || "Pending review"], ["Lab trends", (family.labTrends || []).length || "None"], ["Portal", portal.portalStatus || "pending"], ["Adherence", adherence.status ? `${adherence.adherenceScore}% / ${adherence.status}` : "not scored"]].map(([label, value]) => `<div class="rounded border border-line p-2"><div class="text-muted">${label}</div><div class="mt-1 break-words font-medium">${value}</div></div>`).join("");
+
+        const phone = family.phone || familyLabel(task.familyId);
+        const initials = phone.replace(/\D/g, "").slice(-2) || "??";
+        const lang = family.language || "hi";
+        const meds = family.activeMedicines || [];
+        const labs = family.labTrends || [];
+        const score = adherence.adherenceScore || 0;
+        const adherenceStatus = adherence.status || "not scored";
+        const portalStatus = portal.portalStatus || "pending";
+        const langLabel = { hi: "Hindi", en: "English", mr: "Marathi", gu: "Gujarati" }[lang] || lang.toUpperCase();
+        const portalCls = portalStatus === "active" ? "bg-green text-white" : portalStatus === "pending" ? "bg-amber text-white" : "bg-slate-200 text-slate-600";
+        const scoreColor = score >= 80 ? "#127a4a" : score >= 50 ? "#b75e00" : score > 0 ? "#c52920" : "#94a3b8";
+
+        // sync portal badge in section header
+        const badge = $("patientPortalBadge");
+        if (badge) { badge.textContent = portalStatus; badge.className = `rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${portalCls}`; }
+
+        const medChips = meds.length
+          ? `<div class="flex flex-wrap gap-1">${meds.map((m) => `<span class="inline-flex items-center gap-1 rounded-full border border-green/30 bg-green/5 px-2 py-0.5 text-[10px] font-medium text-green"><span class="h-1.5 w-1.5 rounded-full bg-green flex-shrink-0"></span>${m.name}</span>`).join("")}</div>`
+          : `<span class="text-[11px] text-slate-400 italic">Pending review</span>`;
+
+        return `
+          <div class="flex items-center gap-3 px-3 pt-3 pb-2.5">
+            <div class="h-10 w-10 rounded-full bg-green/10 border-2 border-green/20 flex-shrink-0 flex items-center justify-center">
+              <span class="text-sm font-bold text-green">${initials}</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="text-[13px] font-semibold text-ink truncate">${phone}</div>
+              <div class="flex items-center gap-1 mt-0.5">
+                <span class="rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide bg-slate-100 text-slate-500">${langLabel}</span>
+                <span class="rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${portalCls}">${portalStatus}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mx-3 border-t border-line"></div>
+
+          <div class="px-3 py-2.5">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-muted">Adherence</span>
+              <span class="text-xs font-bold tabular-nums" style="color:${scoreColor}">${score > 0 ? score + "%" : "—"}</span>
+            </div>
+            <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width:${score}%;background:${scoreColor}"></div>
+            </div>
+            <div class="mt-1 text-[10px] text-muted">${adherenceStatus}</div>
+          </div>
+
+          <div class="mx-3 border-t border-line"></div>
+
+          <div class="px-3 py-2.5">
+            <div class="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1.5">Active Medications</div>
+            ${medChips}
+          </div>
+
+          <div class="mx-3 border-t border-line"></div>
+
+          <div class="grid grid-cols-2 divide-x divide-line">
+            <div class="px-3 py-2.5">
+              <div class="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1">Lab Trends</div>
+              <div class="text-lg font-bold text-ink leading-none">${labs.length || "—"}</div>
+              <div class="text-[10px] text-muted mt-0.5">${labs.length ? "recorded" : "none yet"}</div>
+            </div>
+            <div class="px-3 py-2.5">
+              <div class="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1">Family ID</div>
+              <div class="text-[10px] font-mono text-slate-500 break-all leading-tight">${task.familyId}</div>
+            </div>
+          </div>`;
       }
 
       function assistantNote(task) {

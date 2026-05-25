@@ -10,7 +10,7 @@ The repository is a completed L1 skeleton across phases 1-6 with public docs, co
 
 ## Next Recommended Task
 
-Move from L1 pilot readiness to production hardening. Start with real Neon migration verification, authentication/roles, real private object storage, real WABA provider setup, and clinical advisor signoff.
+Publish and maintain this repo as the public L1 reference, then move from L1 pilot readiness to production hardening. Start with real Neon migration verification, authentication/roles, real private object storage, real WABA provider setup, and clinical advisor signoff.
 
 Production-hardening items remain:
 
@@ -37,6 +37,7 @@ Follow `.planning/PHASES.md` for phase receipts and verification notes.
 - Pharmacist CRM should look like a management-accountant operating desk, not a consumer wellness app.
 - Chatbot is allowed only as a bounded care-desk assistant using structured context and safety policy.
 - First pilot must run with `NUSKHA_PILOT_MODE=true`, forcing every outbound explanation through manual review.
+- Public release snapshot lives at `docs/PUBLIC_RELEASE.md`; it is the safe front door for collaborators.
 
 ## Open Risks
 

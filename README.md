@@ -127,7 +127,7 @@ Red path: emergency terms, critical lab values, pregnancy, child patient, chemot
 
 ## Repository Status
 
-This repository starts as a product and technical design package. It is intended to become the implementation home for:
+This repository is now an L1 implementation package across the planned GSD phases. It contains:
 
 - WhatsApp webhook service.
 - Document extraction workers.
@@ -135,6 +135,7 @@ This repository starts as a product and technical design package. It is intended
 - Pharmacist review dashboard.
 - Consent and audit-log system.
 - Test fixtures using synthetic prescriptions and lab reports only.
+- Pilot readiness and public-safe operating documentation.
 
 No real patient documents, phone numbers, prescriptions, or medical records should ever be committed.
 
@@ -145,6 +146,7 @@ No real patient documents, phone numbers, prescriptions, or medical records shou
 - [Technical Implementation Research](./docs/TECHNICAL_IMPLEMENTATION_RESEARCH.md)
 - [Readiness Check](./docs/READINESS_CHECK.md)
 - [Pilot Readiness](./docs/PILOT_READINESS.md)
+- [Public Release Snapshot](./docs/PUBLIC_RELEASE.md)
 - [Chatbot Context](./docs/CHATBOT_CONTEXT.md)
 - [Pharmacist CRM Idea](./docs/PHARMACIST_CRM_IDEA.md)
 - [Competitor Gap Analysis](./docs/COMPETITOR_GAP_ANALYSIS.md)
