@@ -171,6 +171,22 @@ npm run dev:baileys:bridge -- nuskha-dev
 
 Production must use WhatsApp Business API through an approved provider.
 
+## AI Voice Roadmap
+
+Nuskha already has a TTS seam in `src/tts/tts-service.mjs`, plus environment slots for Sarvam and Bhashini. The next voice milestone should borrow the working shape from the local `voice-local-mvp` project: provider abstraction, speech-specific text cleanup before synthesis, caching, latency measurement, and round-trip quality checks.
+
+| Step | Goal | Implementation direction |
+|---|---|---|
+| 1. Real provider adapter | Replace stub voice files with real audio | Implement `sarvam` first, keep `bhashini` as India-language fallback, preserve the current `synthesizeVoice({ script, language })` interface |
+| 2. Spoken-script cleanup | Make voice notes sound human and short | Add a speech-delivery rule layer before TTS so parent scripts become shorter, less formal, and easier to understand when spoken |
+| 3. WhatsApp audio format | Send native voice-note compatible media | Produce OGG/Opus artifacts, store them privately, and pass media URLs to the WABA delivery adapter |
+| 4. Voice cache | Cut cost and latency | Cache common safety phrases and repeated explanations by language, provider, voice, and script hash |
+| 5. Quality checks | Prevent bad or unsafe audio | Re-transcribe generated voice in test mode and compare it against the approved script for meaning drift, missing safety warnings, and pronunciation issues |
+| 6. Observability | Know if voice is usable | Track TTS latency, provider failure rate, cache hit rate, audio duration, and WhatsApp delivery status |
+| 7. Language rollout | Expand safely beyond Hindi | Ship Hindi first, then Marathi, Tamil, Bengali, and Gujarati only after pharmacist review confirms quality |
+
+Voice must remain downstream of human review in pilot mode. The system may generate audio only from the approved parent script, never directly from raw model output.
+
 ## Architecture
 
 ```text
@@ -228,7 +244,7 @@ Before any real pilot:
 - Add authentication and role-based access control.
 - Submit and approve WABA templates.
 - Implement production WABA delivery.
-- Connect real Sarvam/Bhashini TTS output.
+- Connect real Sarvam/Bhashini TTS output, OGG/Opus conversion, voice caching, and audio quality checks.
 - Complete clinical advisor signoff for rule packs and lab thresholds.
 - Run only founder/operator-supervised cases with `NUSKHA_PILOT_MODE=true`.
 
