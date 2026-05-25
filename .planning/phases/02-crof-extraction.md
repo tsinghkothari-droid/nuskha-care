@@ -22,5 +22,9 @@ Replace the stub extractor with Crof/Nahcrof structured extraction while keeping
 
 ## Execution Log
 
-- Pending.
-
+- 2026-05-25: Added Crof/Nahcrof extraction path using the existing OpenAI-compatible chat provider.
+- 2026-05-25: Added strict JSON parse and Zod validation before extraction enters validation/risk.
+- 2026-05-25: Added controlled media-only fallback that routes low-confidence image-heavy cases to review instead of guessing.
+- 2026-05-25: Added `NUSKHA_USE_LIVE_EXTRACTION=false` default so tests do not call live AI accidentally; set true only for live extraction trials.
+- 2026-05-25: Verification passed with `npm test`, `npm run check`, and `npm run fixtures`.
+- Remaining before production: harden prompts with fixture evals, add Gemini vision fallback, and test against synthetic handwritten images.

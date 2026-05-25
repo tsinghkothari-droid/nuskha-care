@@ -24,5 +24,8 @@ Generate and send approved parent-language responses.
 
 ## Execution Log
 
-- Pending.
-
+- 2026-05-25: Added TTS service interface with deterministic local artifact stub and Sarvam/Bhashini provider slots.
+- 2026-05-25: Added delivery service interface with stub, Baileys dev, and WABA placeholder branches.
+- 2026-05-25: Green auto path and approved review path now create voice-note and delivery records.
+- 2026-05-25: Verification passed with `npm test`, `npm run check`, and `npm run fixtures`.
+- Remaining before production: implement real Sarvam/Bhashini calls, OGG Opus conversion, Baileys audio send, WABA upload/send, retry worker, and delivery webhooks.

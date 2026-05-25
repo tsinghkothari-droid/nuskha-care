@@ -1,6 +1,10 @@
 const families = new Map();
 const auditLog = [];
 const reviewTasks = [];
+const processedMessages = new Set();
+const corrections = [];
+const voiceNotes = [];
+const deliveries = [];
 
 export function getOrCreateFamily(inbound) {
   const key = inbound.phone || inbound.remoteJid || "unknown";
@@ -28,6 +32,15 @@ export function recordConsent(family, consent = {}) {
   return family;
 }
 
+export function hasProcessedMessage(messageId) {
+  return messageId ? processedMessages.has(messageId) : false;
+}
+
+export function markMessageProcessed({ messageId }) {
+  if (messageId) processedMessages.add(messageId);
+  return { messageId };
+}
+
 export function writeAuditEvent(event) {
   const item = {
     id: `audit_${auditLog.length + 1}`,
@@ -46,6 +59,38 @@ export function createReviewTask(task) {
     ...task
   };
   reviewTasks.push(item);
+  return item;
+}
+
+export function listReviewTasks({ queue, status = "open" } = {}) {
+  return reviewTasks.filter((task) => {
+    if (queue && task.queue !== queue) return false;
+    if (status && task.status !== status) return false;
+    return true;
+  });
+}
+
+export function getReviewTask(id) {
+  return reviewTasks.find((task) => task.id === id) || null;
+}
+
+export function updateReviewTask(id, updates = {}) {
+  const task = getReviewTask(id);
+  if (!task) return null;
+  Object.assign(task, updates, { updatedAt: new Date().toISOString() });
+  return task;
+}
+
+export function recordCorrection({ taskId, reviewerId, before, after }) {
+  const item = {
+    id: `correction_${corrections.length + 1}`,
+    taskId,
+    reviewerId: reviewerId || null,
+    before,
+    after,
+    createdAt: new Date().toISOString()
+  };
+  corrections.push(item);
   return item;
 }
 
@@ -82,7 +127,30 @@ export function getDebugState() {
   return {
     families: [...families.values()],
     auditLog,
-    reviewTasks
+    reviewTasks,
+    processedMessages: [...processedMessages],
+    corrections,
+    voiceNotes,
+    deliveries
   };
 }
 
+export function recordVoiceNote(voice) {
+  const item = {
+    id: `voice_${voiceNotes.length + 1}`,
+    createdAt: new Date().toISOString(),
+    ...voice
+  };
+  voiceNotes.push(item);
+  return item;
+}
+
+export function recordDelivery(delivery) {
+  const item = {
+    id: `delivery_${deliveries.length + 1}`,
+    createdAt: new Date().toISOString(),
+    ...delivery
+  };
+  deliveries.push(item);
+  return item;
+}

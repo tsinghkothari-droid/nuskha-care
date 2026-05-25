@@ -69,6 +69,14 @@ Nuskha Care separates reading from safety decisions:
 
 The business is not "replace pharmacist." The business is "give pharmacist leverage over the messy long tail."
 
+## Local Commands
+
+```bash
+npm test
+npm run check
+npm run fixtures
+```
+
 ## MVP Paths
 
 Green path: clean prescription or lab report, low-risk content, high extraction confidence. The system can send automatically after safety checks.

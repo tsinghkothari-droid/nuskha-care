@@ -23,5 +23,8 @@ Move Nuskha from memory-only demo to durable local/dev persistence with Neon-sha
 
 ## Execution Log
 
-- Pending.
-
+- 2026-05-25: Added Neon-shaped migration at `db/migrations/001_core.sql`.
+- 2026-05-25: Added store selector, optional Neon store, expanded memory store, duplicate-message guard, and object-storage stub.
+- 2026-05-25: Added synthetic fixtures and `npm run fixtures` covering green, yellow, red, and unsupported flows.
+- 2026-05-25: Verification passed with `npm test`, `npm run check`, and `npm run fixtures`.
+- Remaining before production: run migration against a real Neon database, add migration runner, add real S3-compatible upload implementation.

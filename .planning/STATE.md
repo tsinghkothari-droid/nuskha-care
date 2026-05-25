@@ -2,21 +2,23 @@
 
 ## Active Milestone
 
-Phase 1: Durable Core
+Phase 5: Pharmacist CRM
 
 ## Current Status
 
-The repository is a working L1 skeleton with public docs, core pipeline modules, Baileys dev transport, Crof/Nahcrof health path, Sarvam environment slot, and tests. It is not ready for real medical use.
+The repository is a working L1 skeleton with public docs, core pipeline modules, Baileys dev transport, Crof/Nahcrof health path, Sarvam environment slot, Neon-shaped migration, optional Neon store, review workflow APIs, fixture runner, TTS/delivery interfaces, and tests. It is not ready for real medical use.
 
 ## Next Recommended Task
 
-Implement Neon persistence while preserving the current `src/store/memory-store.mjs` contract:
+Build Phase 5: pharmacist CRM shell using the prompt in `docs/PHARMACIST_CRM_FRONTEND_PROMPT.md` and the bounded chatbot context in `src/core/chatbot-context.mjs`.
 
-1. Add schema/migration files.
-2. Add database connection configuration using `DATABASE_URL`.
-3. Add repository functions for families, consents, audit events, review tasks, and family memory.
-4. Keep memory store as local fallback for tests.
-5. Add tests proving both memory and database-shaped records follow the same behavior.
+Phase 1-4 follow-up items remain production-hardening work:
+
+1. Run and verify migrations against a real Neon database.
+2. Replace object storage stub with real private S3-compatible storage.
+3. Add live Crof extraction fixture evals before enabling `NUSKHA_USE_LIVE_EXTRACTION=true`.
+4. Add real Sarvam/Bhashini TTS and WABA delivery.
+5. Add auth and role checks before exposing review APIs.
 
 Follow `.planning/PHASES.md` and execute the phase files in order.
 

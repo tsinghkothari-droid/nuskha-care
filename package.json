@@ -10,15 +10,17 @@
   "scripts": {
     "dev:api": "node src/server.mjs",
     "simulate": "node src/cli/simulate.mjs",
+    "fixtures": "node src/cli/run-fixtures.mjs",
     "ai:health": "node src/cli/ai-health.mjs",
     "provider:nahcrof": "powershell -ExecutionPolicy Bypass -File scripts/use-nahcrof.ps1",
     "test": "node --test",
-    "check": "node --check src/server.mjs && node --check src/cli/simulate.mjs && node --check src/cli/ai-health.mjs && npm run check:baileys",
+    "check": "node --check src/server.mjs && node --check src/cli/simulate.mjs && node --check src/cli/ai-health.mjs && node --check src/cli/run-fixtures.mjs && npm run check:baileys",
     "dev:baileys:login": "node experimental/baileys-transport/login.mjs",
     "dev:baileys:bridge": "node experimental/baileys-transport/bridge.mjs",
     "check:baileys": "node --check experimental/baileys-transport/login.mjs && node --check experimental/baileys-transport/bridge.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@whiskeysockets/baileys": "^7.0.0-rc.9",
     "dotenv": "^17.3.1",
     "fastify": "^5.8.5",

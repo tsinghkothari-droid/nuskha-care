@@ -6,29 +6,33 @@ import { routeRisk } from "./risk-engine.mjs";
 import { chooseReviewPath } from "./review-router.mjs";
 import { validateMedicalFacts } from "./validator.mjs";
 import { parseInboundMessage } from "../schemas/inbound.mjs";
-import {
-  createReviewTask,
-  getOrCreateFamily,
-  recordConsent,
-  updateFamilyMemory,
-  writeAuditEvent
-} from "../store/memory-store.mjs";
+import { getStore } from "../store/index.mjs";
 
 export async function handleInboundMessage(payload, context = {}) {
+  const store = getStore();
   const parsed = parseInboundMessage(payload);
   if (!parsed.ok) {
     return parsed;
   }
 
   const inbound = parsed.value;
-  const family = getOrCreateFamily(inbound);
+  let family = await store.getOrCreateFamily(inbound);
+
+  if (await store.hasProcessedMessage(inbound.messageId)) {
+    return {
+      ok: true,
+      status: "duplicate_ignored",
+      messageId: inbound.messageId,
+      familyId: family.id
+    };
+  }
 
   if (looksLikeConsentAcceptance(inbound.text)) {
-    recordConsent(family);
+    family = await store.recordConsent(family, { messageId: inbound.messageId });
   }
 
   if (!family.consent) {
-    const audit = writeAuditEvent({
+    const audit = await store.writeAuditEvent({
       type: "consent_required",
       familyId: family.id,
       source: context.source || inbound.source || "unknown",
@@ -43,9 +47,15 @@ export async function handleInboundMessage(payload, context = {}) {
     };
   }
 
+  await store.markMessageProcessed({
+    messageId: inbound.messageId,
+    familyId: family.id,
+    source: context.source || inbound.source || "unknown"
+  });
+
   const classification = classifyDocument(inbound);
   if (classification.type === "unsupported") {
-    const audit = writeAuditEvent({
+    const audit = await store.writeAuditEvent({
       type: "unsupported_document",
       familyId: family.id,
       source: context.source || inbound.source || "unknown",
@@ -62,7 +72,7 @@ export async function handleInboundMessage(payload, context = {}) {
     };
   }
 
-  const extraction = extractStructuredData(inbound, classification);
+  const extraction = await extractStructuredData(inbound, classification);
   const validation = validateMedicalFacts(extraction, family);
   const risk = routeRisk({ extraction, validation, familyMemory: family });
   const draft = generateExplanationDraft({ extraction, validation, risk, family });
@@ -71,7 +81,7 @@ export async function handleInboundMessage(payload, context = {}) {
 
   let reviewTask = null;
   if (route.queue !== "auto") {
-    reviewTask = createReviewTask({
+    reviewTask = await store.createReviewTask({
       queue: route.queue,
       familyId: family.id,
       messageId: inbound.messageId,
@@ -83,9 +93,9 @@ export async function handleInboundMessage(payload, context = {}) {
     });
   }
 
-  updateFamilyMemory(family, validation, { reviewed: false });
+  await store.updateFamilyMemory(family, validation, { reviewed: false });
 
-  const audit = writeAuditEvent({
+  const audit = await store.writeAuditEvent({
     type: "case_processed",
     familyId: family.id,
     source: context.source || inbound.source || "unknown",
@@ -122,4 +132,3 @@ function buildConsentReply(family) {
 
   return "Nuskha Care is not a doctor replacement. We explain medical papers in simple language. Ask your doctor before changing any dose. Reply YES to continue.";
 }
-
