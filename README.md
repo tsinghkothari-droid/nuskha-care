@@ -84,6 +84,20 @@ The live CRM is served by the Fastify backend at:
 http://localhost:8787/crm
 ```
 
+CRM integrations:
+
+- `/integrations/status` shows Nahcrof/Crof configuration and Baileys dev session state.
+- `/integrations/ai/check` runs a live Nahcrof health check when `.env` is configured.
+- `/integrations/whatsapp/status` shows the local Baileys profile pairing state.
+- `/integrations/whatsapp/send` sends a dev WhatsApp text using the paired Baileys profile.
+
+WhatsApp dev bridge:
+
+```bash
+npm run dev:baileys:login -- nuskha-dev --stay-alive
+npm run dev:baileys:bridge -- nuskha-dev
+```
+
 ## MVP Paths
 
 Green path: clean prescription or lab report, low-risk content, high extraction confidence. The system can send automatically after safety checks.

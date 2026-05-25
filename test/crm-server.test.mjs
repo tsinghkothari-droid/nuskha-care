@@ -32,3 +32,16 @@ test("CRM seed route creates real review tasks through pipeline", async () => {
   assert.ok(taskBody.tasks.some((item) => item.risk.path === "red"));
 });
 
+test("integration status exposes AI and WhatsApp state without secrets", async () => {
+  const app = buildServer();
+  const response = await app.inject({ method: "GET", url: "/integrations/status" });
+  await app.close();
+
+  assert.equal(response.statusCode, 200);
+  const body = JSON.parse(response.body);
+  assert.equal(body.ok, true);
+  assert.ok(body.ai);
+  assert.ok(body.whatsapp);
+  assert.equal(body.whatsapp.production, false);
+  assert.equal("apiKey" in body.ai, false);
+});

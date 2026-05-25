@@ -15,6 +15,8 @@ import {
   listReviewTasks
 } from "./core/review-service.mjs";
 import { getStore } from "./store/index.mjs";
+import { getBaileysStatus } from "./transport/baileys-status.mjs";
+import { sendBaileysText } from "./transport/baileys-send.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -38,6 +40,24 @@ export function buildServer() {
   }));
 
   app.get("/health/ai", async () => runAiHealthCheck());
+
+  app.get("/integrations/status", async () => ({
+    ok: true,
+    ai: getAiProviderStatus(),
+    whatsapp: await getBaileysStatus()
+  }));
+
+  app.post("/integrations/ai/check", async () => runAiHealthCheck());
+
+  app.get("/integrations/whatsapp/status", async () => ({
+    ok: true,
+    whatsapp: await getBaileysStatus()
+  }));
+
+  app.post("/integrations/whatsapp/send", async (request, reply) => {
+    const result = await sendBaileysText(request.body || {});
+    return reply.code(result.ok ? 200 : 422).send(result);
+  });
 
   app.get("/crm", async (_request, reply) => {
     const html = await fs.readFile(path.join(rootDir, "frontend", "pharmacist-crm.html"), "utf8");

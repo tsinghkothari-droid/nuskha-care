@@ -51,6 +51,24 @@
           <div id="apiLabel" class="mt-2 break-all text-xs text-slate-700"></div>
           <button id="seedBtn" class="mt-3 w-full rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white">Seed real demo cases</button>
         </div>
+        <div class="mx-3 mt-3 rounded-md border border-line bg-white p-3">
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Integrations</div>
+            <button id="checkAiBtn" class="rounded border border-line px-2 py-1 text-[11px] font-semibold">Check AI</button>
+          </div>
+          <div class="mt-3 space-y-2 text-xs">
+            <div class="flex items-center justify-between gap-2">
+              <span>Nahcrof AI</span>
+              <span id="aiStatus" class="rounded bg-slate-100 px-2 py-1 text-muted">loading</span>
+            </div>
+            <div id="aiDetail" class="break-all text-[11px] leading-5 text-muted"></div>
+            <div class="flex items-center justify-between gap-2 border-t border-line pt-2">
+              <span>WhatsApp dev</span>
+              <span id="waStatus" class="rounded bg-slate-100 px-2 py-1 text-muted">loading</span>
+            </div>
+            <div id="waDetail" class="break-all text-[11px] leading-5 text-muted"></div>
+          </div>
+        </div>
       </aside>
 
       <main class="flex min-w-0 flex-col">
@@ -143,7 +161,8 @@
                   <button id="saveBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Save Edit</button>
                   <button id="approveBtn" class="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white">Approve</button>
                   <button id="escalateBtn" class="rounded-md border border-red/40 px-3 py-2 text-sm font-semibold text-red">Escalate</button>
-                  <button id="reloadTaskBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Reload Case</button>
+                  <button id="sendWhatsappBtn" class="rounded-md border border-green/40 px-3 py-2 text-sm font-semibold text-green">Send WhatsApp</button>
+                  <button id="reloadTaskBtn" class="col-span-2 rounded-md border border-line px-3 py-2 text-sm font-semibold">Reload Case</button>
                 </div>
                 <div class="border-b border-line p-4">
                   <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Care chatbot assistant</h3>
@@ -164,6 +183,7 @@
       const API_BASE = location.port === "8787" ? location.origin : "http://localhost:8787";
       let tasks = [];
       let state = {};
+      let integrations = {};
       let selectedTask = null;
       let activeFilter = "all";
 
@@ -174,10 +194,12 @@
       $("apiLabel").textContent = API_BASE;
       $("refreshBtn").addEventListener("click", loadAll);
       $("seedBtn").addEventListener("click", seedFixtures);
+      $("checkAiBtn").addEventListener("click", checkAi);
       $("reloadTaskBtn").addEventListener("click", () => selectedTask && selectTask(selectedTask.id));
       $("saveBtn").addEventListener("click", saveSelected);
       $("approveBtn").addEventListener("click", approveSelected);
       $("escalateBtn").addEventListener("click", escalateSelected);
+      $("sendWhatsappBtn").addEventListener("click", sendSelectedWhatsapp);
       $("searchInput").addEventListener("input", render);
       document.querySelectorAll(".filterBtn").forEach((button) => {
         button.addEventListener("click", () => {
@@ -201,17 +223,33 @@
       async function loadAll() {
         $("syncStatus").textContent = "Syncing with backend...";
         try {
-          const [taskResult, stateResult] = await Promise.all([
+          const [taskResult, stateResult, integrationResult] = await Promise.all([
             api("/review/tasks"),
-            api("/dev/state")
+            api("/dev/state"),
+            api("/integrations/status")
           ]);
           tasks = taskResult.tasks || [];
           state = stateResult.state || {};
+          integrations = integrationResult || {};
           if (!selectedTask && tasks.length) selectedTask = tasks[0];
           render();
+          renderIntegrations();
           $("syncStatus").textContent = `Live: ${tasks.length} review task(s), ${(state.families || []).length} family record(s)`;
         } catch (error) {
           $("syncStatus").textContent = `Backend not reachable: ${error.message}. Start npm run dev:api, then refresh.`;
+        }
+      }
+
+      async function checkAi() {
+        $("aiStatus").textContent = "checking";
+        $("aiStatus").className = "rounded bg-amber px-2 py-1 text-white";
+        try {
+          const result = await api("/integrations/ai/check", { method: "POST", body: {} });
+          integrations.aiHealth = result;
+          renderIntegrations();
+        } catch (error) {
+          integrations.aiHealth = { ok: false, status: error.message };
+          renderIntegrations();
         }
       }
 
@@ -224,9 +262,29 @@
 
       function render() {
         renderMetrics();
+        renderIntegrations();
         renderTasks();
         renderRefills();
         renderCase(selectedTask);
+      }
+
+      function renderIntegrations() {
+        const ai = integrations.ai || {};
+        const aiHealth = integrations.aiHealth || null;
+        const wa = integrations.whatsapp || {};
+        const aiOk = aiHealth ? aiHealth.ok : ai.configured;
+        $("aiStatus").textContent = aiOk ? "ready" : "not ready";
+        $("aiStatus").className = `rounded px-2 py-1 ${aiOk ? "bg-green text-white" : "bg-amber text-white"}`;
+        $("aiDetail").textContent = aiHealth
+          ? `${aiHealth.provider || ai.provider || "ai"} ${aiHealth.model || ai.model || ""}: ${aiHealth.status || "checked"}`
+          : `${ai.provider || "provider"} / ${ai.extractionProvider || "extractor"} / ${ai.model || "model"}${ai.configured ? "" : " / missing env"}`;
+
+        const waReady = Boolean(wa.sendAvailable);
+        $("waStatus").textContent = waReady ? "paired" : "login needed";
+        $("waStatus").className = `rounded px-2 py-1 ${waReady ? "bg-green text-white" : "bg-amber text-white"}`;
+        $("waDetail").textContent = waReady
+          ? `${wa.profile || "profile"} as ${wa.connectedAs || "stored session"}${wa.bridgeRunning ? " / bridge on" : " / bridge off"}`
+          : `Run npm run dev:baileys:login -- nuskha-dev --stay-alive`;
       }
 
       function visibleTasks() {
@@ -358,6 +416,23 @@
           body: { reviewerId: "crm_operator", reason: "Escalated from CRM" }
         });
         await selectTask(selectedTask.id);
+      }
+
+      async function sendSelectedWhatsapp() {
+        if (!selectedTask) return;
+        const phone = selectedTask.familyId?.replace(/^fam_/, "");
+        const text = $("parentScript").value || selectedTask.draft?.parentScript || selectedTask.draft?.childSummary || "";
+        $("syncStatus").textContent = "Sending WhatsApp through Baileys dev session...";
+        try {
+          const result = await api("/integrations/whatsapp/send", {
+            method: "POST",
+            body: { phone, text, profile: "nuskha-dev" }
+          });
+          $("syncStatus").textContent = `WhatsApp ${result.status}${result.messageId ? `: ${result.messageId}` : ""}`;
+          await loadAll();
+        } catch (error) {
+          $("syncStatus").textContent = `WhatsApp send failed: ${error.message}`;
+        }
       }
 
       function factRows(task) {
