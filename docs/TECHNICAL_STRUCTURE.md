@@ -127,6 +127,13 @@ Run simulated green case:
 npm run simulate -- green
 ```
 
+Configure Nahcrof/Crof AI locally:
+
+```powershell
+npm run provider:nahcrof -- -ApiKey YOUR_KEY -Model glm-4.7-flash
+npm run ai:health
+```
+
 Run tests:
 
 ```bash
@@ -138,4 +145,3 @@ Check syntax:
 ```bash
 npm run check
 ```
-
