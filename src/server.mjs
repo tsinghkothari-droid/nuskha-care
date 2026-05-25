@@ -7,6 +7,7 @@ import { logger } from "./logger.mjs";
 import { demoCases } from "./data/demo-cases.mjs";
 import { getAiProviderStatus, runAiHealthCheck } from "./ai/provider.mjs";
 import { handleInboundMessage } from "./core/pipeline.mjs";
+import { buildPharmacyOpsSummary } from "./core/pharmacy-os.mjs";
 import {
   approveReviewTask,
   editReviewTask,
@@ -63,6 +64,8 @@ export function buildServer() {
     const html = await fs.readFile(path.join(rootDir, "frontend", "pharmacist-crm.html"), "utf8");
     return reply.type("text/html").send(html);
   });
+
+  app.get("/crm/ops", async () => buildPharmacyOpsSummary());
 
   app.post("/dev/whatsapp-inbound", async (request, reply) => {
     const result = await handleInboundMessage(request.body, {

@@ -119,12 +119,18 @@
               </section>
               <section id="reports" class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
                 <div class="border-b border-line px-3 py-2"><h2 class="text-sm font-semibold">Business Desk</h2></div>
-                <div class="grid grid-cols-2 gap-x-4 gap-y-3 p-3 text-xs">
+                <div class="scrollbar-thin h-[202px] overflow-auto p-3 text-xs">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                   <div><div class="text-muted">Care revenue</div><div id="kRevenue" class="mt-1 text-lg font-semibold">₹0</div></div>
                   <div><div class="text-muted">Families active</div><div id="bFamilies" class="mt-1 text-lg font-semibold">0</div></div>
                   <div><div class="text-muted">Review tasks</div><div id="bReviews" class="mt-1 text-lg font-semibold">0</div></div>
                   <div><div class="text-muted">AI / WhatsApp</div><div id="businessState" class="mt-1 text-lg font-semibold text-green">--</div></div>
                   <div id="businessNote" class="col-span-2 rounded bg-slate-50 p-2 text-muted">Business desk updates from live store state.</div>
+                </div>
+                <div class="mt-3 border-t border-line pt-3">
+                  <div class="mb-2 flex items-center justify-between"><span class="font-semibold text-ink">Care Desk Modules</span><span id="opsModuleCount" class="text-muted">0 live</span></div>
+                  <div id="opsCoverageRows" class="grid gap-2"></div>
+                </div>
                 </div>
               </section>
             </div>
@@ -184,9 +190,8 @@
                   <div id="auditTimeline" class="mt-3 space-y-3 text-xs"></div>
                 </section>
                 <section class="rounded-md border border-line bg-white p-3 shadow-ledger">
-                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Activity / Notes</h3>
-                  <textarea class="mt-3 h-20 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm outline-none" placeholder="Add internal note..."></textarea>
-                  <button class="mt-2 rounded-md bg-green px-3 py-2 text-xs font-semibold text-white">Add Note</button>
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">WhatsApp Family Inbox</h3>
+                  <div id="inboxRows" class="scrollbar-thin mt-3 max-h-32 space-y-2 overflow-auto text-xs"></div>
                 </section>
                 <section id="whatsapp" class="rounded-md border border-line bg-white p-3 shadow-ledger">
                   <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Quick Actions</h3>
@@ -210,6 +215,7 @@
       let tasks = [];
       let state = {};
       let integrations = {};
+      let ops = {};
       let selectedTask = null;
       let activeFilter = "all";
 
@@ -247,10 +253,11 @@
       async function loadAll() {
         $("syncStatus").textContent = "Syncing backend...";
         try {
-          const [taskResult, stateResult, integrationResult] = await Promise.all([api("/review/tasks"), api("/dev/state"), api("/integrations/status")]);
+          const [taskResult, stateResult, integrationResult, opsResult] = await Promise.all([api("/review/tasks"), api("/dev/state"), api("/integrations/status"), api("/crm/ops")]);
           tasks = taskResult.tasks || [];
           state = stateResult.state || {};
           integrations = integrationResult || {};
+          ops = opsResult || {};
           if (!selectedTask && tasks.length) selectedTask = tasks[0];
           render();
           $("syncStatus").textContent = `Live: ${tasks.length} review task(s), ${(state.families || []).length} family record(s)`;
@@ -282,6 +289,7 @@
         renderIntegrations();
         renderTasks();
         renderRefills();
+        renderOps();
         renderCase(selectedTask);
       }
 
@@ -305,11 +313,12 @@
         const families = state.families || [];
         const deliveries = state.deliveries || [];
         const refillRows = buildRefillRows();
+        const opsMetrics = ops.metrics || {};
         $("kPending").textContent = tasks.length;
         $("kRed").textContent = `${red} red`;
-        $("kRefill").textContent = rupees(refillRows.reduce((sum, item) => sum + item.value, 0));
+        $("kRefill").textContent = rupees(opsMetrics.refillValueAtRisk || refillRows.reduce((sum, item) => sum + item.value, 0));
         $("kRefillCount").textContent = `${refillRows.length} due`;
-        $("kRevenue").textContent = rupees(families.length * 1299);
+        $("kRevenue").textContent = rupees((families.length * 1299) + (opsMetrics.refillValueAtRisk || 0));
         $("navQueueCount").textContent = tasks.length;
         $("navPatientCount").textContent = families.length;
         $("navRefillCount").textContent = refillRows.length;
@@ -318,7 +327,7 @@
         $("bEscalations").textContent = red;
         $("bFamilies").textContent = families.length;
         $("bDeliveries").textContent = deliveries.length;
-        $("businessNote").textContent = tasks.length ? "Workload is generated from real review tasks in the backend." : "No open review tasks yet. Seed cases to populate live data.";
+        $("businessNote").textContent = ops.productPosition ? `${ops.productPosition}. ${ops.metrics?.draftOrders || 0} draft order(s), ${ops.metrics?.inboxThreads || 0} inbox thread(s).` : tasks.length ? "Workload is generated from real review tasks in the backend." : "No open review tasks yet. Seed cases to populate live data.";
       }
 
       function visibleTasks() {
@@ -352,6 +361,23 @@
       function renderRefills() {
         const rows = buildRefillRows();
         $("refillRows").innerHTML = rows.length ? rows.map((row) => `<tr><td class="px-3 py-2 font-medium">${row.medicine}</td><td class="whitespace-nowrap px-3 py-2">${row.family}</td><td class="px-3 py-2">${row.days}</td><td class="px-3 py-2">${rupees(row.value)}</td><td class="px-3 py-2 text-amber">${row.status}</td></tr>`).join("") : `<tr><td class="px-3 py-5 text-muted" colspan="5">No refill candidates from current task data.</td></tr>`;
+      }
+
+      function renderOps() {
+        const modules = ops.modules || [];
+        const liveCount = modules.filter((item) => item.status === "live_l1").length;
+        $("opsModuleCount").textContent = `${liveCount}/${modules.length} live`;
+        $("opsCoverageRows").innerHTML = modules.length ? modules.map((item) => `<div class="rounded border border-line bg-white p-2">
+          <div class="flex items-center justify-between gap-2"><span class="font-medium">${item.label}</span><span class="${item.status === "live_l1" ? "text-green" : "text-muted"}">${item.count}</span></div>
+          <div class="mt-1 flex items-center justify-between gap-2 text-[11px] text-muted"><span>${item.basis}</span><span>${item.status === "live_l1" ? "live L1" : "ready"}</span></div>
+        </div>`).join("") : `<div class="rounded border border-line p-2 text-muted">Ops coverage loads from /crm/ops.</div>`;
+
+        const inbox = ops.whatsappInbox?.threads || [];
+        $("inboxRows").innerHTML = inbox.length ? inbox.slice(0, 5).map((thread) => `<div class="rounded border border-line bg-slate-50 p-2">
+          <div class="flex items-center justify-between gap-2"><span class="font-medium">${thread.familyLabel}</span><span class="text-muted">${thread.sla}</span></div>
+          <div class="mt-1 line-clamp-2 text-slate-700">${thread.lastMessage}</div>
+          <div class="mt-1 flex items-center justify-between gap-2 text-muted"><span>${thread.status}</span><span>${thread.assignedTo}</span></div>
+        </div>`).join("") : `<div class="rounded border border-line p-2 text-muted">No WhatsApp inbox threads yet.</div>`;
       }
 
       function renderCase(task) {
@@ -442,7 +468,9 @@
 
       function patientLedger(task) {
         const family = (state.families || []).find((item) => item.id === task.familyId) || {};
-        return [["Family", family.phone || familyLabel(task.familyId)], ["Language", family.language || "hi"], ["Known meds", (family.activeMedicines || []).map((item) => item.name).join(", ") || "Pending review"], ["Lab trends", (family.labTrends || []).length || "None"]].map(([label, value]) => `<div class="rounded border border-line p-2"><div class="text-muted">${label}</div><div class="mt-1 break-words font-medium">${value}</div></div>`).join("");
+        const portal = (ops.patientFamilyPortal?.families || []).find((item) => item.familyId === task.familyId) || {};
+        const adherence = (ops.adherenceTracking?.accounts || []).find((item) => item.familyId === task.familyId) || {};
+        return [["Family", family.phone || familyLabel(task.familyId)], ["Language", family.language || "hi"], ["Known meds", (family.activeMedicines || []).map((item) => item.name).join(", ") || "Pending review"], ["Lab trends", (family.labTrends || []).length || "None"], ["Portal", portal.portalStatus || "pending"], ["Adherence", adherence.status ? `${adherence.adherenceScore}% / ${adherence.status}` : "not scored"]].map(([label, value]) => `<div class="rounded border border-line p-2"><div class="text-muted">${label}</div><div class="mt-1 break-words font-medium">${value}</div></div>`).join("");
       }
 
       function assistantNote(task) {
@@ -456,6 +484,10 @@
       }
 
       function buildRefillRows() {
+        const opsRows = ops.refillRecovery?.tasks || [];
+        if (opsRows.length) {
+          return opsRows.map((row) => ({ medicine: row.medicine, family: row.familyLabel, days: row.dueInDays, value: row.estimatedValue, status: row.status }));
+        }
         return tasks.flatMap((task, index) => (task.validation?.medicines || []).filter((medicine) => medicine.matchStatus === "matched").map((medicine) => ({ medicine: medicine.normalizedName, family: familyLabel(task.familyId), days: 3 + index * 2, value: 420 + index * 260, status: task.risk?.path === "red" ? "review before push" : "due soon" })));
       }
 

@@ -86,6 +86,7 @@ http://localhost:8787/crm
 
 CRM integrations:
 
+- `/crm/ops` exposes the L1 pharmacy care desk layer: refill recovery, WhatsApp inbox, family portal summaries, order/payment state, inventory/expiry hooks, med sync, campaigns, adherence, staff SLA, consent, and fulfillment.
 - `/integrations/status` shows Nahcrof/Crof configuration and Baileys dev session state.
 - `/integrations/ai/check` runs a live Nahcrof health check when `.env` is configured.
 - `/integrations/whatsapp/status` shows the local Baileys profile pairing state.
