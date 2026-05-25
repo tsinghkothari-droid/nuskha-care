@@ -32,6 +32,7 @@ Not yet built:
 - Real Sarvam/Bhashini TTS output.
 - Review task API and pharmacist dashboard.
 - Production WABA adapter.
+- Bounded care-desk chatbot UI connected to structured case context.
 - Production consent, audit immutability, erasure, and incident workflows.
 
 ## Product Position
@@ -69,7 +70,12 @@ Strategic pivot:
 - TTS: Sarvam/Bhashini adapter path, WhatsApp-compatible OGG Opus target.
 - WhatsApp dev: Baileys bridge.
 - WhatsApp production: WABA adapter behind the same delivery interface.
+- Chatbot context: bounded assistant context from family memory, extracted facts, validation, risk, review status, and safety policy.
 - Dashboard target: Next.js pharmacist console after API review flows exist.
+
+## Execution Model
+
+The work should run as ordered phases, one after another, using `.planning/PHASES.md` as the index. Each phase has its own file in `.planning/phases/` with build steps, exit criteria, and an execution log. Finish Phase 1 before Phase 2, Phase 2 before Phase 3, and so on unless a hotfix blocks the project.
 
 ## Success Metric
 
@@ -84,4 +90,3 @@ Engineering near-term metric:
 Operational near-term metric:
 
 - A pharmacist can inspect, edit, approve, or escalate a yellow case in under 3 minutes without seeing raw system internals.
-

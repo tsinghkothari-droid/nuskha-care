@@ -64,6 +64,15 @@
 - `DASH-01`: Build a pharmacist queue focused on speed: document, JSON, risk reasons, draft script, edit, approve, escalate.
 - `DASH-02`: Add patient/family context without implying diagnosis authority.
 - `DASH-03`: Add basic pharmacy OS surfaces after review APIs are stable: family list, refill reminders, and follow-up queue.
+- `DASH-04`: Make the pharmacist CRM feel like a serious management-accountant operating desk: dense, precise, ledger-like, quiet, and business-aware.
+
+### Chatbot
+
+- `CHAT-01`: Add a bounded chatbot context builder using family memory, inbound metadata, classification, extraction, validation, risk, and review status.
+- `CHAT-02`: Chatbot must use only supplied context and say unclear when facts are missing.
+- `CHAT-03`: Chatbot must preserve the no-diagnosis, no-dose-change, no-substitution, no-false-reassurance boundaries.
+- `CHAT-04`: Chatbot must output parent script, child summary, pharmacist notes, doctor questions, and safety escalation sections.
+- `CHAT-05`: Dashboard chatbot panel must display risk path and review requirement close to generated answers.
 
 ### Safety and Compliance
 
@@ -81,4 +90,3 @@
 - Sell medicine in MVP.
 - Use Baileys in production.
 - Commit real medical files or secrets.
-

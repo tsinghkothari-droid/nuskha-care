@@ -18,6 +18,8 @@ Implement Neon persistence while preserving the current `src/store/memory-store.
 4. Keep memory store as local fallback for tests.
 5. Add tests proving both memory and database-shaped records follow the same behavior.
 
+Follow `.planning/PHASES.md` and execute the phase files in order.
+
 ## Recent Decisions
 
 - Neon replaces Supabase for Postgres.
@@ -27,6 +29,8 @@ Implement Neon persistence while preserving the current `src/store/memory-store.
 - Sarvam key is local-only in `.env`; never commit it.
 - Baileys remains internal development transport only.
 - Product direction includes a pharmacist OS layer after the core review workflow is stable.
+- Pharmacist CRM should look like a management-accountant operating desk, not a consumer wellness app.
+- Chatbot is allowed only as a bounded care-desk assistant using structured context and safety policy.
 
 ## Open Risks
 
@@ -37,4 +41,3 @@ Implement Neon persistence while preserving the current `src/store/memory-store.
 - Review dashboard does not exist yet.
 - Real TTS output is not implemented.
 - Audit immutability and erasure process are not implemented.
-

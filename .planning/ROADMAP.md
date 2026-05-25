@@ -92,12 +92,15 @@ Deliverables:
 - Follow-up/refill queue stub.
 - Productivity metrics for review time and queue SLA.
 - Operator authentication and role boundaries.
+- Bounded chatbot assistant panel using case context, family memory, risk reasons, and safety policy.
+- Management-accountant visual direction: dense ledgers, strong tables, precise status, restrained palette, and business metrics.
 
 Exit criteria:
 
 - Pharmacist can process a yellow case in under 3 minutes in local demo.
 - Dashboard never hides risk reasons.
 - Dashboard does not imply diagnostic authority.
+- Chatbot cannot invent clinical facts or override the risk engine.
 
 ## Phase 6: Pilot Readiness
 
@@ -119,4 +122,3 @@ Exit criteria:
 - Founder can process a synthetic WABA case from intake to delivery.
 - Every outbound response is reviewed in pilot mode.
 - Team can explain storage, access, deletion, and incident handling.
-
