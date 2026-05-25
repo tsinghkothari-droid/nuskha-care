@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.next/
+dist/
+build/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Patient data must never enter this repo
+patient-data/
+real-prescriptions/
+real-lab-reports/
+uploads/
+exports/
+
+# OS
+Desktop.ini
+Thumbs.db
+.DS_Store
+
