@@ -307,7 +307,7 @@
         const waReady = Boolean(wa.sendAvailable);
         $("waStatus").textContent = `WhatsApp ${waReady ? "Paired" : "Login"}`;
         $("waStatus").className = `chip ${waReady ? "bg-green text-white" : "bg-amber text-white"}`;
-        $("waDetail").textContent = waReady ? `${wa.profile || "profile"} as ${wa.connectedAs || "stored session"}${wa.bridgeRunning ? " / bridge on" : " / bridge off"}` : "Run Baileys login";
+        $("waDetail").textContent = waReady ? `${wa.profile || "profile"} stored dev session${wa.bridgeRunning ? " / bridge on" : " / bridge off"}` : "Run Baileys login";
         $("businessState").textContent = aiOk && waReady ? "Ready" : "Setup";
       }
 
@@ -363,7 +363,7 @@
 
       function renderRefills() {
         const rows = buildRefillRows();
-        $("refillRows").innerHTML = rows.length ? rows.map((row) => `<tr><td class="px-3 py-2 font-medium">${row.medicine}</td><td class="whitespace-nowrap px-3 py-2">${row.family}</td><td class="px-3 py-2">${row.days}</td><td class="px-3 py-2">${rupees(row.value)}</td><td class="px-3 py-2 text-amber">${row.status}</td></tr>`).join("") : `<tr><td class="px-3 py-5 text-muted" colspan="5">No refill candidates from current task data.</td></tr>`;
+        $("refillRows").innerHTML = rows.length ? rows.map((row) => `<tr><td class="px-3 py-2 font-medium">${row.medicine}</td><td class="whitespace-nowrap px-3 py-2">${publicFamilyLabel(row.family)}</td><td class="px-3 py-2">${row.days}</td><td class="px-3 py-2">${rupees(row.value)}</td><td class="px-3 py-2 text-amber">${row.status}</td></tr>`).join("") : `<tr><td class="px-3 py-5 text-muted" colspan="5">No refill candidates from current task data.</td></tr>`;
       }
 
       function renderOps() {
@@ -377,7 +377,7 @@
 
         const inbox = ops.whatsappInbox?.threads || [];
         $("inboxRows").innerHTML = inbox.length ? inbox.slice(0, 5).map((thread) => `<div class="rounded border border-line bg-slate-50 p-2">
-          <div class="flex items-center justify-between gap-2"><span class="font-medium">${thread.familyLabel}</span><span class="text-muted">${thread.sla}</span></div>
+          <div class="flex items-center justify-between gap-2"><span class="font-medium">${publicFamilyLabel(thread.familyLabel)}</span><span class="text-muted">${thread.sla}</span></div>
           <div class="mt-1 line-clamp-2 text-slate-700">${thread.lastMessage}</div>
           <div class="mt-1 flex items-center justify-between gap-2 text-muted"><span>${thread.status}</span><span>${thread.assignedTo}</span></div>
         </div>`).join("") : `<div class="rounded border border-line p-2 text-muted">No WhatsApp inbox threads yet.</div>`;
@@ -475,7 +475,7 @@
         const portal = (ops.patientFamilyPortal?.families || []).find((item) => item.familyId === task.familyId) || {};
         const adherence = (ops.adherenceTracking?.accounts || []).find((item) => item.familyId === task.familyId) || {};
 
-        const phone = family.phone || familyLabel(task.familyId);
+        const phone = familyLabel(task.familyId);
         const initials = phone.replace(/\D/g, "").slice(-2) || "??";
         const lang = family.language || "hi";
         const meds = family.activeMedicines || [];
@@ -539,7 +539,7 @@
             </div>
             <div class="px-3 py-2.5">
               <div class="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1">Family ID</div>
-              <div class="text-[10px] font-mono text-slate-500 break-all leading-tight">${task.familyId}</div>
+              <div class="text-[10px] font-mono text-slate-500 break-all leading-tight">${maskIdentifier(task.familyId)}</div>
             </div>
           </div>`;
       }
@@ -562,7 +562,22 @@
         return tasks.flatMap((task, index) => (task.validation?.medicines || []).filter((medicine) => medicine.matchStatus === "matched").map((medicine) => ({ medicine: medicine.normalizedName, family: familyLabel(task.familyId), days: 3 + index * 2, value: 420 + index * 260, status: task.risk?.path === "red" ? "review before push" : "due soon" })));
       }
 
-      function familyLabel(familyId = "") { return familyId.replace(/^fam_/, "+").replace(/(\+\d{2})(\d{5})(\d+)/, "$1 $2 $3") || "Unknown family"; }
+      function familyLabel(familyId = "") {
+        const digits = String(familyId || "").replace(/^fam_/, "").replace(/\D/g, "");
+        if (!digits) return "Unknown family";
+        const country = digits.length > 10 ? `+${digits.slice(0, digits.length - 10)}` : "+91";
+        return `${country} •••• ${digits.slice(-4)}`;
+      }
+      function publicFamilyLabel(value = "") {
+        const digits = String(value || "").replace(/\D/g, "");
+        if (digits.length < 6) return String(value || "Unknown family");
+        const country = digits.length > 10 ? `+${digits.slice(0, digits.length - 10)}` : "+91";
+        return `${country} •••• ${digits.slice(-4)}`;
+      }
+      function maskIdentifier(value = "") {
+        const text = String(value || "");
+        return text.replace(/\d(?=\d{4})/g, "•");
+      }
       function ageLabel(createdAt) { if (!createdAt) return "now"; const minutes = Math.round(Math.max(0, Date.now() - new Date(createdAt).getTime()) / 60000); return minutes < 60 ? `${minutes}m` : `${Math.round(minutes / 60)}h`; }
       function nextAction(task) { if (task.status === "approved") return "Delivered"; if (task.queue === "doctor") return "Escalate to Doctor"; if (task.risk?.path === "yellow") return "Verify & Approve"; return "Approve"; }
 

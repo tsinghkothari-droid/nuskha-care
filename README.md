@@ -10,6 +10,8 @@ It is not a doctor, not a diagnosis engine, not a medicine marketplace, and not 
 
 This repository is a public L1 implementation across the planned GSD phases. It contains working local APIs, synthetic fixtures, provider seams, a pharmacist CRM, and pilot-readiness controls.
 
+![Nuskha Care pharmacist CRM dashboard](./docs/assets/pharmacist-crm-dashboard.png)
+
 | Area | Status |
 |---|---|
 | Core intake and consent | implemented-l1 |
