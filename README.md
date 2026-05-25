@@ -75,6 +75,13 @@ The business is not "replace pharmacist." The business is "give pharmacist lever
 npm test
 npm run check
 npm run fixtures
+npm run dev:crm
+```
+
+The live CRM is served by the Fastify backend at:
+
+```text
+http://localhost:8787/crm
 ```
 
 ## MVP Paths

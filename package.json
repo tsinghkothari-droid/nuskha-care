@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev:api": "node src/server.mjs",
+    "dev:crm": "node src/server.mjs",
     "simulate": "node src/cli/simulate.mjs",
     "fixtures": "node src/cli/run-fixtures.mjs",
     "ai:health": "node src/cli/ai-health.mjs",

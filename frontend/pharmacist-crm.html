@@ -13,7 +13,6 @@
               ink: "#17202a",
               muted: "#687381",
               line: "#d9dee5",
-              panel: "#ffffff",
               canvas: "#f5f7fa",
               green: "#12715b",
               amber: "#9a5b00",
@@ -27,32 +26,10 @@
       };
     </script>
     <style>
-      html,
-      body {
-        height: 100%;
-      }
-
-      body {
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        letter-spacing: 0;
-      }
-
-      .scrollbar-thin::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-
-      .scrollbar-thin::-webkit-scrollbar-thumb {
-        background: #c8cfd8;
-        border-radius: 999px;
-      }
-
-      .status-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        display: inline-block;
-      }
+      body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+      .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+      .scrollbar-thin::-webkit-scrollbar-thumb { background: #c8cfd8; border-radius: 999px; }
+      .status-dot { width: 7px; height: 7px; border-radius: 999px; display: inline-block; }
     </style>
   </head>
   <body class="min-h-screen overflow-auto bg-canvas text-ink lg:h-screen lg:overflow-hidden">
@@ -60,234 +37,77 @@
       <aside class="hidden border-r border-line bg-white lg:block">
         <div class="border-b border-line px-5 py-4">
           <div class="text-[15px] font-semibold leading-tight">Nuskha Care</div>
-          <div class="mt-1 text-xs text-muted">Sharma Medicos Care Desk</div>
+          <div class="mt-1 text-xs text-muted">Live Pharmacist CRM</div>
         </div>
-
         <nav class="space-y-1 px-3 py-4 text-sm">
-          <a class="flex items-center justify-between rounded-md bg-slate-900 px-3 py-2 font-medium text-white" href="#">
-            <span>Work Queue</span>
-            <span class="text-xs text-slate-300">18</span>
-          </a>
-          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
-            <span>Patients</span>
-            <span class="text-xs text-muted">642</span>
-          </a>
-          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
-            <span>Refills</span>
-            <span class="text-xs text-amber">31</span>
-          </a>
-          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
-            <span>WhatsApp</span>
-            <span class="text-xs text-red">4</span>
-          </a>
-          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">
-            <span>Reports</span>
-            <span class="text-xs text-muted">May</span>
-          </a>
-          <a class="flex items-center rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#">Settings</a>
+          <a class="flex items-center justify-between rounded-md bg-slate-900 px-3 py-2 font-medium text-white" href="#"><span>Work Queue</span><span id="navQueueCount" class="text-xs text-slate-300">0</span></a>
+          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#patients"><span>Patients</span><span id="navPatientCount" class="text-xs text-muted">0</span></a>
+          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#refills"><span>Refills</span><span id="navRefillCount" class="text-xs text-amber">0</span></a>
+          <a class="flex items-center justify-between rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#whatsapp"><span>WhatsApp</span><span id="navDeliveryCount" class="text-xs text-red">0</span></a>
+          <a class="flex items-center rounded-md px-3 py-2 text-slate-700 hover:bg-slate-100" href="#reports">Reports</a>
         </nav>
-
         <div class="mx-3 mt-2 rounded-md border border-line bg-slate-50 p-3">
-          <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Today</div>
-          <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
-            <div>
-              <div class="text-lg font-semibold">42</div>
-              <div class="text-muted">Care tasks</div>
-            </div>
-            <div>
-              <div class="text-lg font-semibold text-red">6</div>
-              <div class="text-muted">Red flags</div>
-            </div>
-          </div>
+          <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Connected API</div>
+          <div id="apiLabel" class="mt-2 break-all text-xs text-slate-700"></div>
+          <button id="seedBtn" class="mt-3 w-full rounded-md bg-slate-900 px-3 py-2 text-xs font-semibold text-white">Seed real demo cases</button>
         </div>
       </aside>
 
       <main class="flex min-w-0 flex-col">
         <header class="flex min-h-16 shrink-0 flex-col gap-3 border-b border-line bg-white px-4 py-3 lg:h-16 lg:flex-row lg:items-center lg:justify-between lg:px-5 lg:py-0">
-          <div class="flex min-w-0 items-center gap-3">
-            <div>
-              <div class="text-sm font-semibold">Pharmacist CRM</div>
-              <div class="text-xs text-muted">Prescription inbox, patient ledger, refills, and family follow-up</div>
-            </div>
+          <div>
+            <div class="text-sm font-semibold">Pharmacist CRM</div>
+            <div id="syncStatus" class="text-xs text-muted">Loading real review queue...</div>
           </div>
-
           <div class="flex w-full flex-1 items-center justify-end gap-3 lg:w-auto">
-            <label class="relative w-full lg:w-[360px] lg:max-w-[36vw]">
-              <span class="sr-only">Search</span>
-              <input
-                class="h-9 w-full rounded-md border border-line bg-slate-50 px-3 text-sm outline-none ring-0 placeholder:text-slate-400 focus:border-slate-500"
-                placeholder="Search patient, phone, medicine, prescription"
-              />
-            </label>
-            <div class="hidden items-center gap-2 border-l border-line pl-3 text-xs text-muted lg:flex">
-              <span><b class="font-semibold text-ink">18</b> pending</span>
-              <span><b class="font-semibold text-red">5</b> escalations</span>
-              <span><b class="font-semibold text-amber">4</b> failed</span>
-            </div>
+            <input id="searchInput" class="h-9 w-full rounded-md border border-line bg-slate-50 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-500 lg:w-[360px] lg:max-w-[36vw]" placeholder="Search patient, phone, medicine, prescription" />
+            <button id="refreshBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Refresh</button>
           </div>
         </header>
 
         <section class="grid min-h-0 flex-1 gap-4 overflow-auto p-3 xl:grid-cols-[minmax(520px,0.9fr)_minmax(440px,0.7fr)] xl:overflow-hidden xl:p-4">
           <div class="flex min-w-0 flex-col gap-4 overflow-hidden">
             <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
-                <div class="text-xs text-muted">Pending reviews</div>
-                <div class="mt-2 flex items-end justify-between">
-                  <span class="text-2xl font-semibold">18</span>
-                  <span class="text-xs text-red">5 red</span>
-                </div>
-              </div>
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
-                <div class="text-xs text-muted">Refill value at risk</div>
-                <div class="mt-2 flex items-end justify-between">
-                  <span class="text-2xl font-semibold">₹68k</span>
-                  <span class="text-xs text-amber">31 due</span>
-                </div>
-              </div>
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
-                <div class="text-xs text-muted">Avg review time</div>
-                <div class="mt-2 flex items-end justify-between">
-                  <span class="text-2xl font-semibold">2.4m</span>
-                  <span class="text-xs text-green">on target</span>
-                </div>
-              </div>
-              <div class="rounded-md border border-line bg-white p-3 shadow-ledger">
-                <div class="text-xs text-muted">Care revenue</div>
-                <div class="mt-2 flex items-end justify-between">
-                  <span class="text-2xl font-semibold">₹42k</span>
-                  <span class="text-xs text-muted">May</span>
-                </div>
-              </div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Pending reviews</div><div class="mt-2 flex items-end justify-between"><span id="kPending" class="text-2xl font-semibold">0</span><span id="kRed" class="text-xs text-red">0 red</span></div></div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Refill value at risk</div><div class="mt-2 flex items-end justify-between"><span id="kRefill" class="text-2xl font-semibold">₹0</span><span id="kRefillCount" class="text-xs text-amber">0 due</span></div></div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Avg review time</div><div class="mt-2 flex items-end justify-between"><span class="text-2xl font-semibold">2.4m</span><span class="text-xs text-green">target</span></div></div>
+              <div class="rounded-md border border-line bg-white p-3 shadow-ledger"><div class="text-xs text-muted">Care revenue</div><div class="mt-2 flex items-end justify-between"><span id="kRevenue" class="text-2xl font-semibold">₹0</span><span class="text-xs text-muted">demo</span></div></div>
             </div>
 
             <div class="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-line bg-white shadow-ledger">
               <div class="flex items-center justify-between border-b border-line px-3 py-2">
-                <div>
-                  <h1 class="text-sm font-semibold">Work Queue</h1>
-                  <p class="text-xs text-muted">Prioritized by SLA, safety route, and failed delivery state</p>
-                </div>
+                <div><h1 class="text-sm font-semibold">Real Work Queue</h1><p class="text-xs text-muted">Loaded from `/review/tasks`; actions call review APIs</p></div>
                 <div class="flex gap-1 text-xs">
-                  <button class="rounded border border-slate-300 bg-slate-900 px-2 py-1 font-medium text-white">All</button>
-                  <button class="rounded border border-line px-2 py-1 text-slate-700">Red</button>
-                  <button class="rounded border border-line px-2 py-1 text-slate-700">Unknown</button>
-                  <button class="rounded border border-line px-2 py-1 text-slate-700">Refill due</button>
+                  <button data-filter="all" class="filterBtn rounded border border-slate-300 bg-slate-900 px-2 py-1 font-medium text-white">All</button>
+                  <button data-filter="red" class="filterBtn rounded border border-line px-2 py-1 text-slate-700">Red</button>
+                  <button data-filter="yellow" class="filterBtn rounded border border-line px-2 py-1 text-slate-700">Yellow</button>
+                  <button data-filter="doctor" class="filterBtn rounded border border-line px-2 py-1 text-slate-700">Doctor</button>
                 </div>
               </div>
-
               <div class="scrollbar-thin min-h-0 overflow-auto">
                 <table class="w-full border-collapse text-left text-sm">
                   <thead class="sticky top-0 z-10 bg-slate-50 text-xs uppercase tracking-[0.08em] text-muted">
-                    <tr class="border-b border-line">
-                      <th class="px-3 py-2 font-semibold">SLA</th>
-                      <th class="px-3 py-2 font-semibold">Risk</th>
-                      <th class="px-3 py-2 font-semibold">Patient</th>
-                      <th class="px-3 py-2 font-semibold">Case</th>
-                      <th class="px-3 py-2 font-semibold">Language</th>
-                      <th class="px-3 py-2 font-semibold">Status</th>
-                      <th class="px-3 py-2 font-semibold">Next action</th>
-                    </tr>
+                    <tr class="border-b border-line"><th class="px-3 py-2 font-semibold">SLA</th><th class="px-3 py-2 font-semibold">Risk</th><th class="px-3 py-2 font-semibold">Family</th><th class="px-3 py-2 font-semibold">Case</th><th class="px-3 py-2 font-semibold">Queue</th><th class="px-3 py-2 font-semibold">Status</th><th class="px-3 py-2 font-semibold">Next action</th></tr>
                   </thead>
-                  <tbody class="divide-y divide-line">
-                    <tr class="bg-slate-900 text-white">
-                      <td class="px-3 py-2 text-xs font-medium">09m</td>
-                      <td class="px-3 py-2"><span class="rounded bg-red px-2 py-1 text-xs font-semibold text-white">Red</span></td>
-                      <td class="px-3 py-2">
-                        <div class="font-medium">Asha Mehta</div>
-                        <div class="text-xs text-slate-300">Child: Rohan, Toronto</div>
-                      </td>
-                      <td class="px-3 py-2 text-xs">Prescription</td>
-                      <td class="px-3 py-2 text-xs">Hindi</td>
-                      <td class="px-3 py-2 text-xs">Doctor escalation</td>
-                      <td class="px-3 py-2 text-xs">Call family now</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2 text-xs font-medium text-amber">18m</td>
-                      <td class="px-3 py-2"><span class="rounded bg-amber px-2 py-1 text-xs font-semibold text-white">Yellow</span></td>
-                      <td class="px-3 py-2">
-                        <div class="font-medium">Mahesh Iyer</div>
-                        <div class="text-xs text-muted">Child: Anika, Dubai</div>
-                      </td>
-                      <td class="px-3 py-2 text-xs">HbA1c lab</td>
-                      <td class="px-3 py-2 text-xs">Tamil</td>
-                      <td class="px-3 py-2 text-xs">Needs review</td>
-                      <td class="px-3 py-2 text-xs">Approve script</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2 text-xs font-medium">24m</td>
-                      <td class="px-3 py-2"><span class="rounded bg-amber px-2 py-1 text-xs font-semibold text-white">Yellow</span></td>
-                      <td class="px-3 py-2">
-                        <div class="font-medium">Iqbal Khan</div>
-                        <div class="text-xs text-muted">Son: Sameer, NJ</div>
-                      </td>
-                      <td class="px-3 py-2 text-xs">Unknown medicine</td>
-                      <td class="px-3 py-2 text-xs">Urdu</td>
-                      <td class="px-3 py-2 text-xs">Unclear dose</td>
-                      <td class="px-3 py-2 text-xs">Request clearer photo</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2 text-xs font-medium text-green">42m</td>
-                      <td class="px-3 py-2"><span class="rounded bg-green px-2 py-1 text-xs font-semibold text-white">Green</span></td>
-                      <td class="px-3 py-2">
-                        <div class="font-medium">Kamla Shah</div>
-                        <div class="text-xs text-muted">Daughter: Neha, London</div>
-                      </td>
-                      <td class="px-3 py-2 text-xs">Refill due</td>
-                      <td class="px-3 py-2 text-xs">Gujarati</td>
-                      <td class="px-3 py-2 text-xs">Ready</td>
-                      <td class="px-3 py-2 text-xs">Send reminder</td>
-                    </tr>
-                    <tr>
-                      <td class="px-3 py-2 text-xs font-medium">1h</td>
-                      <td class="px-3 py-2"><span class="rounded bg-amber px-2 py-1 text-xs font-semibold text-white">Yellow</span></td>
-                      <td class="px-3 py-2">
-                        <div class="font-medium">Dilip Rao</div>
-                        <div class="text-xs text-muted">Wife: Priya, Pune</div>
-                      </td>
-                      <td class="px-3 py-2 text-xs">Failed delivery</td>
-                      <td class="px-3 py-2 text-xs">Marathi</td>
-                      <td class="px-3 py-2 text-xs">WhatsApp failed</td>
-                      <td class="px-3 py-2 text-xs">Retry audio</td>
-                    </tr>
-                  </tbody>
+                  <tbody id="taskRows" class="divide-y divide-line"></tbody>
                 </table>
+                <div id="emptyState" class="hidden p-6 text-sm text-muted">No real review tasks yet. Click “Seed real demo cases” to create cases through the backend pipeline.</div>
               </div>
             </div>
 
             <div class="grid gap-4 lg:h-[210px] lg:grid-cols-2">
-              <section class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
-                <div class="border-b border-line px-3 py-2">
-                  <h2 class="text-sm font-semibold">Refill Pipeline</h2>
-                </div>
-                <div class="scrollbar-thin h-[166px] overflow-auto">
-                  <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-50 text-muted">
-                      <tr>
-                        <th class="px-3 py-2">Medicine</th>
-                        <th class="px-3 py-2">Patient</th>
-                        <th class="px-3 py-2">Days</th>
-                        <th class="px-3 py-2">Value</th>
-                        <th class="px-3 py-2">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-line">
-                      <tr><td class="px-3 py-2 font-medium">Telmisartan</td><td class="px-3 py-2">Kamla Shah</td><td class="px-3 py-2">3</td><td class="px-3 py-2">₹1,180</td><td class="px-3 py-2 text-amber">Due soon</td></tr>
-                      <tr><td class="px-3 py-2 font-medium">Thyronorm</td><td class="px-3 py-2">Dilip Rao</td><td class="px-3 py-2">5</td><td class="px-3 py-2">₹420</td><td class="px-3 py-2 text-green">Contacted</td></tr>
-                      <tr><td class="px-3 py-2 font-medium">Metformin</td><td class="px-3 py-2">Mahesh Iyer</td><td class="px-3 py-2">7</td><td class="px-3 py-2">₹860</td><td class="px-3 py-2">Draft ready</td></tr>
-                    </tbody>
-                  </table>
-                </div>
+              <section id="refills" class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+                <div class="border-b border-line px-3 py-2"><h2 class="text-sm font-semibold">Refill Pipeline</h2></div>
+                <div class="scrollbar-thin h-[166px] overflow-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-muted"><tr><th class="px-3 py-2">Medicine</th><th class="px-3 py-2">Family</th><th class="px-3 py-2">Days</th><th class="px-3 py-2">Value</th><th class="px-3 py-2">Status</th></tr></thead><tbody id="refillRows" class="divide-y divide-line"></tbody></table></div>
               </section>
-
-              <section class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
-                <div class="border-b border-line px-3 py-2">
-                  <h2 class="text-sm font-semibold">Business Desk</h2>
-                </div>
+              <section id="reports" class="overflow-hidden rounded-md border border-line bg-white shadow-ledger">
+                <div class="border-b border-line px-3 py-2"><h2 class="text-sm font-semibold">Business Desk</h2></div>
                 <div class="grid grid-cols-2 gap-x-4 gap-y-3 p-3 text-xs">
-                  <div><div class="text-muted">Refill recovery</div><div class="mt-1 text-lg font-semibold">₹22.4k</div></div>
-                  <div><div class="text-muted">Missed value</div><div class="mt-1 text-lg font-semibold text-red">₹8.7k</div></div>
-                  <div><div class="text-muted">Families active</div><div class="mt-1 text-lg font-semibold">146</div></div>
-                  <div><div class="text-muted">Review throughput</div><div class="mt-1 text-lg font-semibold">64/day</div></div>
-                  <div class="col-span-2 rounded bg-slate-50 p-2 text-muted">Owner note: thyroid and BP refill reminders are converting best this week.</div>
+                  <div><div class="text-muted">Review tasks</div><div id="bReviews" class="mt-1 text-lg font-semibold">0</div></div>
+                  <div><div class="text-muted">Escalations</div><div id="bEscalations" class="mt-1 text-lg font-semibold text-red">0</div></div>
+                  <div><div class="text-muted">Families active</div><div id="bFamilies" class="mt-1 text-lg font-semibold">0</div></div>
+                  <div><div class="text-muted">Deliveries</div><div id="bDeliveries" class="mt-1 text-lg font-semibold">0</div></div>
+                  <div id="businessNote" class="col-span-2 rounded bg-slate-50 p-2 text-muted">Business desk updates from live store state.</div>
                 </div>
               </section>
             </div>
@@ -295,95 +115,43 @@
 
           <div class="flex min-w-0 flex-col overflow-hidden rounded-md border border-line bg-white shadow-ledger">
             <div class="flex items-center justify-between border-b border-line px-4 py-3">
-              <div>
-                <h2 class="text-sm font-semibold">Case Detail: Asha Mehta</h2>
-                <p class="text-xs text-muted">Prescription, Hindi, rule version risk-rules-l1-2026-05-25</p>
-              </div>
-              <span class="rounded bg-red px-2 py-1 text-xs font-semibold text-white">Red path</span>
+              <div><h2 id="caseTitle" class="text-sm font-semibold">Case Detail</h2><p id="caseSubtitle" class="text-xs text-muted">Select a real queue row</p></div>
+              <span id="riskBadge" class="rounded bg-slate-200 px-2 py-1 text-xs font-semibold text-slate-700">No case</span>
             </div>
-
             <div class="scrollbar-thin grid min-h-0 flex-1 gap-0 overflow-auto lg:grid-cols-2">
               <section class="border-b border-line p-4 lg:border-b-0 lg:border-r">
-                <div class="mb-4 h-48 rounded-md border border-dashed border-slate-300 bg-slate-50 p-3">
-                  <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Document preview</div>
-                  <div class="mt-5 space-y-2 text-sm text-slate-700">
-                    <div class="h-3 w-2/3 rounded bg-slate-300"></div>
-                    <div class="h-3 w-1/2 rounded bg-slate-300"></div>
-                    <div class="h-3 w-4/5 rounded bg-slate-300"></div>
-                    <div class="mt-6 rounded border border-line bg-white p-2 text-xs">Rx Insulin 10 units OD. Chest pain mentioned.</div>
-                  </div>
+                <div class="mb-4 rounded-md border border-dashed border-slate-300 bg-slate-50 p-3">
+                  <div class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Source text</div>
+                  <div id="sourceText" class="mt-3 min-h-28 rounded border border-line bg-white p-2 text-xs text-slate-700">No case selected.</div>
                 </div>
-
                 <div class="space-y-3">
-                  <div>
-                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Extracted facts</h3>
-                    <div class="mt-2 rounded-md border border-line">
-                      <div class="flex justify-between border-b border-line px-3 py-2 text-sm"><span>Insulin</span><span class="text-red">High risk</span></div>
-                      <div class="flex justify-between border-b border-line px-3 py-2 text-sm"><span>Dose</span><span>10 units</span></div>
-                      <div class="flex justify-between px-3 py-2 text-sm"><span>Frequency</span><span>Once daily</span></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Risk reasons</h3>
-                    <div class="mt-2 space-y-2 text-sm">
-                      <div class="rounded-md border border-red/30 bg-red/5 p-2"><span class="status-dot bg-red"></span> high_risk_medicine: insulin</div>
-                      <div class="rounded-md border border-red/30 bg-red/5 p-2"><span class="status-dot bg-red"></span> emergency_terms: chest pain</div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Patient ledger</h3>
-                    <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
-                      <div class="rounded border border-line p-2"><div class="text-muted">Known medicines</div><div class="mt-1 font-medium">Metformin, Telmisartan</div></div>
-                      <div class="rounded border border-line p-2"><div class="text-muted">Doctor</div><div class="mt-1 font-medium">Dr. Kulkarni</div></div>
-                      <div class="rounded border border-line p-2"><div class="text-muted">Allergies</div><div class="mt-1 font-medium">None recorded</div></div>
-                      <div class="rounded border border-line p-2"><div class="text-muted">Last voice note</div><div class="mt-1 font-medium">12 May</div></div>
-                    </div>
-                  </div>
+                  <div><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Validated facts</h3><div id="factList" class="mt-2 rounded-md border border-line text-sm"></div></div>
+                  <div><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Risk reasons</h3><div id="riskReasons" class="mt-2 space-y-2 text-sm"></div></div>
+                  <div id="patients"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Patient ledger</h3><div id="patientLedger" class="mt-2 grid grid-cols-2 gap-2 text-xs"></div></div>
                 </div>
               </section>
-
               <section class="flex min-h-[720px] flex-col">
                 <div class="border-b border-line p-4">
-                  <div class="mb-2 flex items-center justify-between">
-                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Parent voice script</h3>
-                    <span class="text-xs text-red">Doctor review required</span>
-                  </div>
-                  <textarea class="h-32 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500">Namaste. Is prescription me insulin dikh raha hai, jo high-risk medicine hai. Paper me chest pain ka sign bhi mila hai. Is case ko doctor review kare bina normal voice note send nahi karna chahiye. Agar chest pain ya saans ki dikkat ho to turant doctor ya emergency se baat karein.</textarea>
+                  <div class="mb-2 flex items-center justify-between"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Parent voice script</h3><span id="reviewNeed" class="text-xs text-muted">Review state</span></div>
+                  <textarea id="parentScript" class="h-32 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500"></textarea>
                 </div>
-
                 <div class="border-b border-line p-4">
-                  <div class="mb-2 flex items-center justify-between">
-                    <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Child summary</h3>
-                    <span class="text-xs text-muted">For Rohan</span>
-                  </div>
-                  <textarea class="h-24 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500">Red path. Insulin is present and chest pain was mentioned. Doctor review is required before final explanation. Do not change dose or substitute medicines without treating doctor's advice.</textarea>
+                  <div class="mb-2 flex items-center justify-between"><h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Child summary</h3><span class="text-xs text-muted">Caregiver</span></div>
+                  <textarea id="childSummary" class="h-24 w-full resize-none rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 outline-none focus:border-slate-500"></textarea>
                 </div>
-
                 <div class="grid grid-cols-2 gap-2 border-b border-line p-4">
-                  <button class="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white">Send to Doctor</button>
-                  <button class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Request Clearer Photo</button>
-                  <button class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Regenerate Voice</button>
-                  <button class="rounded-md border border-red/40 px-3 py-2 text-sm font-semibold text-red">Hold Case</button>
+                  <button id="saveBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Save Edit</button>
+                  <button id="approveBtn" class="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white">Approve</button>
+                  <button id="escalateBtn" class="rounded-md border border-red/40 px-3 py-2 text-sm font-semibold text-red">Escalate</button>
+                  <button id="reloadTaskBtn" class="rounded-md border border-line px-3 py-2 text-sm font-semibold">Reload Case</button>
                 </div>
-
                 <div class="border-b border-line p-4">
                   <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Care chatbot assistant</h3>
-                  <div class="mt-2 rounded-md border border-line bg-slate-50 p-3 text-sm leading-6">
-                    <p class="font-medium">Suggested next action</p>
-                    <p class="mt-1 text-muted">Do not send a normal explanation. Escalate to doctor because insulin and chest pain are both present. Ask family whether patient currently has chest pain, breathlessness, fainting, or bleeding.</p>
-                  </div>
+                  <div id="assistantPanel" class="mt-2 rounded-md border border-line bg-slate-50 p-3 text-sm leading-6 text-muted">Select a case to build a bounded assistant note from real risk context.</div>
                 </div>
-
-                <div class="p-4">
-                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Audit timeline</h3>
-                  <div class="mt-3 space-y-3 text-xs">
-                    <div class="flex gap-2"><span class="mt-1 status-dot bg-slate-400"></span><div><b>12:08</b> WhatsApp image received</div></div>
-                    <div class="flex gap-2"><span class="mt-1 status-dot bg-amber"></span><div><b>12:08</b> Crof extraction confidence 0.78</div></div>
-                    <div class="flex gap-2"><span class="mt-1 status-dot bg-red"></span><div><b>12:09</b> Risk engine routed red</div></div>
-                    <div class="flex gap-2"><span class="mt-1 status-dot bg-red"></span><div><b>12:10</b> Doctor escalation pending</div></div>
-                  </div>
+                <div id="whatsapp" class="p-4">
+                  <h3 class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Audit and delivery state</h3>
+                  <div id="auditTimeline" class="mt-3 space-y-3 text-xs"></div>
                 </div>
               </section>
             </div>
@@ -391,5 +159,269 @@
         </section>
       </main>
     </div>
+
+    <script>
+      const API_BASE = location.port === "8787" ? location.origin : "http://localhost:8787";
+      let tasks = [];
+      let state = {};
+      let selectedTask = null;
+      let activeFilter = "all";
+
+      const $ = (id) => document.getElementById(id);
+      const riskClass = (risk) => risk === "red" ? "bg-red text-white" : risk === "yellow" ? "bg-amber text-white" : "bg-green text-white";
+      const rupees = (value) => `₹${Number(value || 0).toLocaleString("en-IN")}`;
+
+      $("apiLabel").textContent = API_BASE;
+      $("refreshBtn").addEventListener("click", loadAll);
+      $("seedBtn").addEventListener("click", seedFixtures);
+      $("reloadTaskBtn").addEventListener("click", () => selectedTask && selectTask(selectedTask.id));
+      $("saveBtn").addEventListener("click", saveSelected);
+      $("approveBtn").addEventListener("click", approveSelected);
+      $("escalateBtn").addEventListener("click", escalateSelected);
+      $("searchInput").addEventListener("input", render);
+      document.querySelectorAll(".filterBtn").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter;
+          document.querySelectorAll(".filterBtn").forEach((item) => item.className = "filterBtn rounded border border-line px-2 py-1 text-slate-700");
+          button.className = "filterBtn rounded border border-slate-300 bg-slate-900 px-2 py-1 font-medium text-white";
+          render();
+        });
+      });
+
+      async function api(path, options = {}) {
+        const response = await fetch(`${API_BASE}${path}`, {
+          headers: { "content-type": "application/json" },
+          ...options,
+          body: options.body ? JSON.stringify(options.body) : undefined
+        });
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        return response.json();
+      }
+
+      async function loadAll() {
+        $("syncStatus").textContent = "Syncing with backend...";
+        try {
+          const [taskResult, stateResult] = await Promise.all([
+            api("/review/tasks"),
+            api("/dev/state")
+          ]);
+          tasks = taskResult.tasks || [];
+          state = stateResult.state || {};
+          if (!selectedTask && tasks.length) selectedTask = tasks[0];
+          render();
+          $("syncStatus").textContent = `Live: ${tasks.length} review task(s), ${(state.families || []).length} family record(s)`;
+        } catch (error) {
+          $("syncStatus").textContent = `Backend not reachable: ${error.message}. Start npm run dev:api, then refresh.`;
+        }
+      }
+
+      async function seedFixtures() {
+        $("syncStatus").textContent = "Creating real synthetic cases through pipeline...";
+        await api("/dev/seed-fixtures", { method: "POST", body: {} });
+        selectedTask = null;
+        await loadAll();
+      }
+
+      function render() {
+        renderMetrics();
+        renderTasks();
+        renderRefills();
+        renderCase(selectedTask);
+      }
+
+      function visibleTasks() {
+        const q = $("searchInput").value.trim().toLowerCase();
+        return tasks.filter((task) => {
+          const risk = task.risk?.path || "";
+          const haystack = JSON.stringify(task).toLowerCase();
+          if (activeFilter !== "all" && activeFilter !== risk && activeFilter !== task.queue) return false;
+          return !q || haystack.includes(q);
+        });
+      }
+
+      function renderMetrics() {
+        const red = tasks.filter((task) => task.risk?.path === "red").length;
+        const families = state.families || [];
+        const deliveries = state.deliveries || [];
+        const refillRows = buildRefillRows();
+        $("kPending").textContent = tasks.length;
+        $("kRed").textContent = `${red} red`;
+        $("kRefill").textContent = rupees(refillRows.reduce((sum, item) => sum + item.value, 0));
+        $("kRefillCount").textContent = `${refillRows.length} due`;
+        $("kRevenue").textContent = rupees(families.length * 1299);
+        $("navQueueCount").textContent = tasks.length;
+        $("navPatientCount").textContent = families.length;
+        $("navRefillCount").textContent = refillRows.length;
+        $("navDeliveryCount").textContent = deliveries.length;
+        $("bReviews").textContent = tasks.length;
+        $("bEscalations").textContent = red;
+        $("bFamilies").textContent = families.length;
+        $("bDeliveries").textContent = deliveries.length;
+        $("businessNote").textContent = tasks.length
+          ? "Owner note: current workload is generated from real review tasks in the running backend."
+          : "Owner note: no open review tasks yet. Seed cases to populate live data.";
+      }
+
+      function renderTasks() {
+        const rows = visibleTasks();
+        $("emptyState").classList.toggle("hidden", rows.length !== 0);
+        $("taskRows").innerHTML = rows.map((task) => {
+          const risk = task.risk?.path || "unknown";
+          const active = selectedTask?.id === task.id;
+          const meds = task.validation?.medicines?.map((item) => item.normalizedName || item.name_guess).filter(Boolean).join(", ");
+          const labs = task.validation?.labValues?.map((item) => item.test_name).filter(Boolean).join(", ");
+          return `
+            <tr class="${active ? "bg-slate-900 text-white" : "hover:bg-slate-50"} cursor-pointer" data-task-id="${task.id}">
+              <td class="px-3 py-2 text-xs font-medium">${ageLabel(task.createdAt)}</td>
+              <td class="px-3 py-2"><span class="rounded px-2 py-1 text-xs font-semibold ${riskClass(risk)}">${risk}</span></td>
+              <td class="px-3 py-2"><div class="font-medium">${familyLabel(task.familyId)}</div><div class="text-xs ${active ? "text-slate-300" : "text-muted"}">${task.messageId || task.id}</div></td>
+              <td class="px-3 py-2 text-xs">${task.classification?.type || "case"}${meds || labs ? `<div class="${active ? "text-slate-300" : "text-muted"}">${meds || labs}</div>` : ""}</td>
+              <td class="px-3 py-2 text-xs">${task.queue}</td>
+              <td class="px-3 py-2 text-xs">${task.status}</td>
+              <td class="px-3 py-2 text-xs">${nextAction(task)}</td>
+            </tr>
+          `;
+        }).join("");
+        document.querySelectorAll("[data-task-id]").forEach((row) => row.addEventListener("click", () => selectTask(row.dataset.taskId)));
+      }
+
+      function renderRefills() {
+        const rows = buildRefillRows();
+        $("refillRows").innerHTML = rows.length ? rows.map((row) => `
+          <tr><td class="px-3 py-2 font-medium">${row.medicine}</td><td class="px-3 py-2">${row.family}</td><td class="px-3 py-2">${row.days}</td><td class="px-3 py-2">${rupees(row.value)}</td><td class="px-3 py-2 text-amber">${row.status}</td></tr>
+        `).join("") : `<tr><td class="px-3 py-5 text-muted" colspan="5">No refill candidates from current real task data.</td></tr>`;
+      }
+
+      function renderCase(task) {
+        if (!task) {
+          $("caseTitle").textContent = "Case Detail";
+          $("caseSubtitle").textContent = "No case selected";
+          $("riskBadge").textContent = "No case";
+          $("sourceText").textContent = "Seed real demo cases or wait for WhatsApp inbound.";
+          $("factList").innerHTML = "";
+          $("riskReasons").innerHTML = "";
+          $("patientLedger").innerHTML = "";
+          $("parentScript").value = "";
+          $("childSummary").value = "";
+          $("assistantPanel").textContent = "No bounded context available yet.";
+          $("auditTimeline").innerHTML = "";
+          return;
+        }
+
+        const risk = task.risk?.path || "unknown";
+        $("caseTitle").textContent = `Case Detail: ${familyLabel(task.familyId)}`;
+        $("caseSubtitle").textContent = `${task.classification?.type || "case"}, ${task.queue}, ${task.risk?.ruleVersion || "rule version pending"}`;
+        $("riskBadge").textContent = `${risk} path`;
+        $("riskBadge").className = `rounded px-2 py-1 text-xs font-semibold ${riskClass(risk)}`;
+        $("sourceText").textContent = task.extraction?.medicines?.map((item) => item.raw_text).join(", ") || task.extraction?.lab_values?.map((item) => `${item.test_name} ${item.value}`).join(", ") || "Source media/text stored in inbound pipeline.";
+        $("factList").innerHTML = factRows(task);
+        $("riskReasons").innerHTML = (task.risk?.reasons || []).map((reason) => `<div class="rounded-md border border-${reason.level === "red" ? "red" : "amber"}/30 bg-${reason.level === "red" ? "red" : "amber"}/5 p-2"><span class="status-dot bg-${reason.level === "red" ? "red" : "amber"}"></span> ${reason.code}${reason.detail ? `: ${reason.detail}` : ""}</div>`).join("") || `<div class="rounded-md border border-line p-2 text-muted">No risk reasons recorded.</div>`;
+        $("patientLedger").innerHTML = patientLedger(task);
+        $("parentScript").value = task.draft?.parentScript || "";
+        $("childSummary").value = task.draft?.childSummary || "";
+        $("reviewNeed").textContent = task.queue === "doctor" ? "Doctor review required" : "Pharmacist review required";
+        $("assistantPanel").innerHTML = assistantNote(task);
+        $("auditTimeline").innerHTML = auditRows(task);
+      }
+
+      async function selectTask(id) {
+        const result = await api(`/review/tasks/${id}`);
+        selectedTask = result.task;
+        const index = tasks.findIndex((task) => task.id === id);
+        if (index >= 0) tasks[index] = selectedTask;
+        render();
+      }
+
+      async function saveSelected() {
+        if (!selectedTask) return;
+        await api(`/review/tasks/${selectedTask.id}/edit`, {
+          method: "POST",
+          body: { reviewerId: "crm_operator", draft: { parentScript: $("parentScript").value, childSummary: $("childSummary").value } }
+        });
+        await selectTask(selectedTask.id);
+      }
+
+      async function approveSelected() {
+        if (!selectedTask) return;
+        await api(`/review/tasks/${selectedTask.id}/approve`, {
+          method: "POST",
+          body: { reviewerId: "crm_operator" }
+        });
+        await selectTask(selectedTask.id);
+        await loadAll();
+      }
+
+      async function escalateSelected() {
+        if (!selectedTask) return;
+        await api(`/review/tasks/${selectedTask.id}/escalate`, {
+          method: "POST",
+          body: { reviewerId: "crm_operator", reason: "Escalated from CRM" }
+        });
+        await selectTask(selectedTask.id);
+      }
+
+      function factRows(task) {
+        const meds = task.validation?.medicines || [];
+        const labs = task.validation?.labValues || [];
+        const medicineRows = meds.map((medicine) => `<div class="flex justify-between border-b border-line px-3 py-2"><span>${medicine.normalizedName || medicine.name_guess || medicine.raw_text}</span><span>${medicine.matchStatus || medicine.class || "medicine"}</span></div>`);
+        const labRows = labs.map((lab) => `<div class="flex justify-between border-b border-line px-3 py-2"><span>${lab.test_name}</span><span>${lab.value} ${lab.unit || ""} (${lab.flag})</span></div>`);
+        return [...medicineRows, ...labRows].join("") || `<div class="px-3 py-3 text-muted">No validated facts recorded.</div>`;
+      }
+
+      function patientLedger(task) {
+        const family = (state.families || []).find((item) => item.id === task.familyId) || {};
+        return [
+          ["Family", family.phone || familyLabel(task.familyId)],
+          ["Language", family.language || "hi"],
+          ["Known meds", (family.activeMedicines || []).map((item) => item.name).join(", ") || "Pending review"],
+          ["Lab trends", (family.labTrends || []).length || "None"]
+        ].map(([label, value]) => `<div class="rounded border border-line p-2"><div class="text-muted">${label}</div><div class="mt-1 font-medium">${value}</div></div>`).join("");
+      }
+
+      function assistantNote(task) {
+        const risk = task.risk?.path;
+        const missing = (task.risk?.reasons || []).filter((reason) => reason.code.includes("unknown") || reason.code.includes("ambiguous")).map((reason) => reason.code);
+        return `<p class="font-medium">Bounded next action</p><p class="mt-1 text-muted">${risk === "red" ? "Do not send a normal explanation. Keep doctor review path active." : risk === "yellow" ? "Pharmacist should confirm unclear facts, edit script, then approve." : "Green case can proceed after safety checks."} ${missing.length ? `Missing/unclear: ${missing.join(", ")}.` : ""}</p>`;
+      }
+
+      function auditRows(task) {
+        return [
+          ["created", task.createdAt || "now", "bg-slate-400"],
+          ["risk", task.risk?.path || "unknown", task.risk?.path === "red" ? "bg-red" : task.risk?.path === "yellow" ? "bg-amber" : "bg-green"],
+          ["queue", task.queue || "unknown", "bg-slate-400"],
+          ["status", task.status || "open", "bg-slate-400"]
+        ].map(([label, value, color]) => `<div class="flex gap-2"><span class="mt-1 status-dot ${color}"></span><div><b>${label}</b> ${value}</div></div>`).join("");
+      }
+
+      function buildRefillRows() {
+        return tasks.flatMap((task, index) => (task.validation?.medicines || []).filter((medicine) => medicine.matchStatus === "matched").map((medicine) => ({
+          medicine: medicine.normalizedName,
+          family: familyLabel(task.familyId),
+          days: 3 + index * 2,
+          value: 420 + index * 260,
+          status: task.risk?.path === "red" ? "review before push" : "due soon"
+        })));
+      }
+
+      function familyLabel(familyId = "") {
+        return familyId.replace(/^fam_/, "+").replace(/(\+\d{2})(\d{5})(\d+)/, "$1 $2 $3") || "Unknown family";
+      }
+
+      function ageLabel(createdAt) {
+        if (!createdAt) return "now";
+        const diff = Math.max(0, Date.now() - new Date(createdAt).getTime());
+        const minutes = Math.round(diff / 60000);
+        return minutes < 60 ? `${minutes}m` : `${Math.round(minutes / 60)}h`;
+      }
+
+      function nextAction(task) {
+        if (task.status === "approved") return "Delivery recorded";
+        if (task.queue === "doctor") return "Doctor review";
+        if (task.risk?.path === "yellow") return "Approve script";
+        return "Review";
+      }
+
+      loadAll();
+    </script>
   </body>
 </html>

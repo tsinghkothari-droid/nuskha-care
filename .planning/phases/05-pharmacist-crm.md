@@ -25,4 +25,10 @@ Build the first pharmacist CRM/dashboard as a serious care-management console, v
 
 ## Execution Log
 
-- Pending.
+- 2026-05-25: Converted the static CRM prototype into a real API-backed dashboard.
+- 2026-05-25: Added backend-served `/crm` route so the dashboard can run on the same Fastify origin as the review APIs.
+- 2026-05-25: Added `/dev/seed-fixtures` to create synthetic cases through the actual consent, extraction, risk, review, voice, and delivery pipeline.
+- 2026-05-25: Added `/dev/state` so CRM metrics, patient ledger, refill rows, delivery counts, and business desk use store state instead of hardcoded mock arrays.
+- 2026-05-25: CRM queue now loads from `/review/tasks`; edit, approve, escalate, reload, and seed actions call real backend APIs.
+- 2026-05-25: Added regression tests for `/crm` and CRM seed-to-review-task flow.
+- Remaining before production: add authentication, role permissions, real patient search, pagination, real refill scheduling, and move the UI into a maintainable Next.js app when the product surface stabilizes.
