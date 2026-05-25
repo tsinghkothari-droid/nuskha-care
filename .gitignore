@@ -21,9 +21,9 @@ real-prescriptions/
 real-lab-reports/
 uploads/
 exports/
+.runtime/
 
 # OS
 Desktop.ini
 Thumbs.db
 .DS_Store
-

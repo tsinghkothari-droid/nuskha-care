@@ -1,0 +1,22 @@
+{
+  "name": "nuskha-care",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "WhatsApp-first medical document explanation for Indian families, with AI drafts, rule-based risk routing, and human review.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev:baileys:login": "node experimental/baileys-transport/login.mjs",
+    "dev:baileys:bridge": "node experimental/baileys-transport/bridge.mjs",
+    "check:baileys": "node --check experimental/baileys-transport/login.mjs && node --check experimental/baileys-transport/bridge.mjs"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
+    "dotenv": "^17.3.1",
+    "pino": "^9.9.4",
+    "qrcode": "^1.5.4"
+  }
+}
+
